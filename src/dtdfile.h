@@ -1,0 +1,1 @@
+void translatable_to_dtd(Translatable )
