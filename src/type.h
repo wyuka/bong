@@ -6,6 +6,8 @@
 #ifndef __FILE_TYPE_H__
 #define __FILE_TYPE_H__
 
+struct _Translatable;
+
 #include <glib-object.h>
 
 /*
@@ -22,30 +24,31 @@
 typedef struct _FileType FileType;
 typedef struct _FileTypeClass FileTypeClass;
 
+struct _FileTypeClass
+{
+    GTypeClass gtypeclass;
+    GObjectClass parent_class;
+
+    void (*read_file) (FileType *self, struct _Translatable *tr, gchar *fileName);
+};
+
 struct _FileType
 {
+    GObject parent_instance;
     GTypeInstance gtype;
 
     /* private */
     gchar* m_fileTypeName;
 };
 
-struct _FileTypeClass
-{
-    GTypeClass gtypeclass;
-
-    void (*read_file) (FileType *self, gchar *fileName);
-};
-
 GType file_type_get_type (void);
 
 void file_type_class_init (gpointer klass, gpointer klass_data);
-void file_type_class_final (gpointer klass, gpointer klass_data);
 void file_type_instance_init (GTypeInstance *instance, gpointer klass);
 
 /* Public methods */
 
 /* virtual public methods */
-void file_type_read_file (FileType *self, gchar *file_name);
+void file_type_read_file (FileType *self, struct _Translatable *tr, gchar *file_name);
 
 #endif /* __FILE_TYPE_H__ */

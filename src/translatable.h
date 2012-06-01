@@ -24,27 +24,29 @@
 typedef struct _Translatable Translatable;
 typedef struct _TranslatableClass TranslatableClass;
 
+struct _TranslatableClass
+{
+    GObjectClass parent_class;
+    GTypeClass gtypeclass;
+};
+
 struct _Translatable
 {
+    GObject parent_instance;
     GTypeInstance gtype;
 
     /* private */
-};
-
-struct _TranslatableClass
-{
-    GTypeClass gtypeclass;
-
-    void (*read_file) (Translatable *self, gchar *fileName);
+    FileType *file_type;
+    void (*read_file) (FileType *file_type, Translatable *self, gchar *fileName);
 };
 
 GType translatable_get_type (void);
 
 void translatable_class_init (gpointer klass, gpointer klass_data);
-void translatable_class_final (gpointer klass, gpointer klass_data);
 void translatable_instance_init (GTypeInstance *instance, gpointer klass);
 
 /* public functions */
+Translatable* translatable_new (void);
 void translatable_init (Translatable *self, FileType *file_type);
 void translatable_read_file (Translatable *self, gchar *file_name);
 
