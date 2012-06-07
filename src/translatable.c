@@ -2,6 +2,8 @@
  * Copyright/Licensing information.
  */
 
+#define MAX_ENTRY_NUMBER 9999
+
 #include "translatable.h"
 #include "hashvalue.h"
 #include "localestring.h"
@@ -27,6 +29,7 @@ void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar 
         hash_value_set_entry_index (v, entry_number);
         hash_value_add_localestring (v, locale_string);
         g_hash_table_insert (self->hash_table, t_uik, v);
+        self->entry_array[entry_number] = v;
     }
     else
     {
@@ -49,9 +52,57 @@ gchar* translatable_get_string_for_uik (Translatable *self, gchar *uik, gchar *l
     }
 }
 
+EntryIndex translatable_get_entry_index_for_uik (Translatable *self, gchar *uik)
+{
+    HashValue *v = g_hash_table_lookup (self->hash_table, uik);
+    if (v == NULL)
+    {
+        return -1;
+    }
+
+    return hash_value_get_entry_index (v);
+}
+
 gchar* translatable_get_note_for_uik (Translatable *self, gchar *uik)
 {
     HashValue *v = g_hash_table_lookup (self->hash_table, uik);
+    if (v == NULL)
+    {
+        return NULL;
+    }
+
+    return hash_value_get_note (v);
+}
+
+gchar* translatable_get_string_for_entry_index (Translatable *self, EntryIndex entry_number, gchar *locale)
+{
+    HashValue *v = self->entry_array[entry_number];
+    if (v == NULL)
+    {
+        return NULL;
+    }
+
+    LocaleString *ls = hash_value_find_localestring (v, locale);
+    if (ls != NULL)
+    {
+        return locale_string_get_string (ls);
+    }
+}
+
+gchar* translatable_get_uik_for_entry_index (Translatable *self, EntryIndex entry_number)
+{
+    HashValue *v = self->entry_array[entry_number];
+    if (v == NULL)
+    {
+        return NULL;
+    }
+
+    return hash_value_get_uik (v);
+}
+
+gchar* translatable_get_note_for_entry_index (Translatable *self, EntryIndex entry_number)
+{
+    HashValue *v = self->entry_array[entry_number];
     if (v == NULL)
     {
         return NULL;
@@ -78,6 +129,7 @@ void translatable_init (Translatable *self, FileType *file_type)
     self->read_file = (void *)(FILE_TYPE_GET_CLASS (file_type)->read_file);
     self->file_type = file_type;
     self->hash_table = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, hash_value_destroy);
+    self->entry_array = g_malloc0 (sizeof(HashValue*) * MAX_ENTRY_NUMBER + 1);
 }
 
 Translatable* translatable_new (void)
@@ -89,6 +141,7 @@ void translatable_destroy (gpointer data)
 {
     Translatable *self = TRANSLATABLE (data);
     g_hash_table_destroy(self->hash_table);
+    g_free(self->entry_array);
 }
 
 GType translatable_get_type (void)

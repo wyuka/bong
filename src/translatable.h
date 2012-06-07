@@ -24,6 +24,8 @@
 typedef struct _Translatable Translatable;
 typedef struct _TranslatableClass TranslatableClass;
 
+struct _HashValue;
+
 typedef int EntryIndex;
 
 struct _TranslatableClass
@@ -40,6 +42,7 @@ struct _Translatable
     /* private */
     GHashTable *hash_table;
     FileType *file_type;
+    struct _HashValue **entry_array;
     void (*read_file) (FileType *file_type, Translatable *self, gchar *fileName);
 };
 
@@ -56,7 +59,13 @@ void translatable_destroy (gpointer data);
 void translatable_read_file (Translatable *self, gchar *file_name);
 
 void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar *uik, gchar *note, gchar *locale, gchar *string);
+
 gchar* translatable_get_string_for_uik (Translatable *self, gchar *uik, gchar *locale);
+EntryIndex translatable_get_entry_index_for_uik (Translatable *self, gchar *uik);
 gchar* translatable_get_note_for_uik (Translatable *self, gchar *uik);
+
+gchar* translatable_get_string_for_entry_index(Translatable *self, EntryIndex entry_number, gchar *locale);
+gchar* translatable_get_uik_for_entry_index(Translatable *self, EntryIndex entry_number);
+gchar* translatable_get_note_for_entry_index(Translatable *self, EntryIndex entry_number);
 
 #endif /* __TRANSLATABLE_H__ */
