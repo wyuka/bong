@@ -6,6 +6,7 @@
 #ifndef __TRANSLATABLE_H__
 #define __TRANSLATABLE_H__
 
+#include "localestring.h"
 #include "type.h"
 
 #include <glib-object.h>
@@ -36,6 +37,7 @@ struct _Translatable
     GTypeInstance gtype;
 
     /* private */
+    GHashTable *hash_table;
     FileType *file_type;
     void (*read_file) (FileType *file_type, Translatable *self, gchar *fileName);
 };
@@ -48,6 +50,11 @@ void translatable_instance_init (GTypeInstance *instance, gpointer klass);
 /* public functions */
 Translatable* translatable_new (void);
 void translatable_init (Translatable *self, FileType *file_type);
+void translatable_destroy (gpointer data);
+
 void translatable_read_file (Translatable *self, gchar *file_name);
+
+void translatable_add_localestring (Translatable *self, gchar *uik, LocaleString *locale_string);
+LocaleString* translatable_find_localestring (Translatable *self, gchar *uik, gchar *locale);
 
 #endif /* __TRANSLATABLE_H__ */

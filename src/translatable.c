@@ -1,4 +1,10 @@
+/*
+ * Copyright/Licensing information.
+ */
+
 #include "translatable.h"
+#include "hashvalue.h"
+#include "localestring.h"
 #include "type.h"
 
 /* Public methods */
@@ -6,6 +12,34 @@
 void translatable_read_file (Translatable *self, gchar *file_name)
 {
     self->read_file (self->file_type, self, file_name);
+}
+
+void translatable_add_localestring (Translatable *self, gchar *uik, LocaleString *locale_string)
+{
+    HashValue *v = g_hash_table_lookup (self->hash_table, uik);
+    if (v == NULL)
+    {
+        gchar *t_uik = g_strdup(uik);
+        v = hash_value_new ();
+        hash_value_set_uik (v, t_uik);
+        hash_value_add_localestring (v, locale_string);
+        g_hash_table_insert (self->hash_table, t_uik, v);
+    }
+    else
+    {
+        hash_value_add_localestring (v, locale_string);
+    }
+}
+
+LocaleString* translatable_find_localestring (Translatable *self, gchar *uik, gchar *locale)
+{
+    HashValue *v = g_hash_table_lookup (self->hash_table, uik);
+    if (v == NULL)
+    {
+        return NULL;
+    }
+
+    return hash_value_find_localestring (v, locale);
 }
 
 /* This is called when the class is initialized */
@@ -25,11 +59,18 @@ void translatable_init (Translatable *self, FileType *file_type)
 {
     self->read_file = (void *)(FILE_TYPE_GET_CLASS (file_type)->read_file);
     self->file_type = file_type;
+    self->hash_table = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, hash_value_destroy);
 }
 
 Translatable* translatable_new (void)
 {
     return g_object_new(TYPE_TRANSLATABLE, NULL);
+}
+
+void translatable_destroy (gpointer data)
+{
+    Translatable *self = TRANSLATABLE (data);
+    g_hash_table_destroy(self->hash_table);
 }
 
 GType translatable_get_type (void)

@@ -1,3 +1,7 @@
+/*
+ * Copyright/Licensing information.
+ */
+
 #include "dtdfile.h"
 #include "type.h"
 #include "translatable.h"
@@ -8,7 +12,7 @@
 
 void dtd_file_type_read_file (DtdFileType *self, Translatable *tr, gchar *file_name)
 {
-    printf("derived: %s\n", file_name);
+    // nothing for now
 }
 
 /* This is called when the class is initialized */

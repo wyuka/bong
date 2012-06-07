@@ -1,3 +1,7 @@
+/*
+ * Copyright/Licensing information.
+ */
+
 #include "type.h"
 #include "translatable.h"
 
