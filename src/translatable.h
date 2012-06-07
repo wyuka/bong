@@ -6,7 +6,6 @@
 #ifndef __TRANSLATABLE_H__
 #define __TRANSLATABLE_H__
 
-#include "localestring.h"
 #include "type.h"
 
 #include <glib-object.h>
@@ -24,6 +23,8 @@
 
 typedef struct _Translatable Translatable;
 typedef struct _TranslatableClass TranslatableClass;
+
+typedef int EntryIndex;
 
 struct _TranslatableClass
 {
@@ -54,7 +55,8 @@ void translatable_destroy (gpointer data);
 
 void translatable_read_file (Translatable *self, gchar *file_name);
 
-void translatable_add_localestring (Translatable *self, gchar *uik, LocaleString *locale_string);
-LocaleString* translatable_find_localestring (Translatable *self, gchar *uik, gchar *locale);
+void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar *uik, gchar *note, gchar *locale, gchar *string);
+gchar* translatable_get_string_for_uik (Translatable *self, gchar *uik, gchar *locale);
+gchar* translatable_get_note_for_uik (Translatable *self, gchar *uik);
 
 #endif /* __TRANSLATABLE_H__ */

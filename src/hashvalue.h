@@ -23,6 +23,8 @@
 typedef struct _HashValue HashValue;
 typedef struct _HashValueClass HashValueClass;
 
+typedef int EntryIndex;
+
 struct _HashValueClass
 {
     GObjectClass parent_class;
@@ -36,6 +38,8 @@ struct _HashValue
 
     /* private */
     gchar *uik;
+    gchar *note;
+    EntryIndex entry_number;
     GList *list;
 };
 
@@ -52,5 +56,10 @@ void hash_value_add_localestring (HashValue *self, LocaleString *string);
 LocaleString* hash_value_find_localestring (HashValue *self, gchar *locale);
 
 void hash_value_set_uik (HashValue *self, gchar *uik);
+void hash_value_set_note (HashValue *self, gchar *note);
+void hash_value_set_entry_index (HashValue *self, EntryIndex entry_number);
+gchar* hash_value_get_uik (HashValue *self);
+gchar* hash_value_get_note (HashValue *self);
+EntryIndex hash_value_get_entry_index (HashValue *self);
 
 #endif /* __HASH_VALUE_H__ */

@@ -29,10 +29,36 @@ void hash_value_set_uik (HashValue *self, gchar *uik)
     self->uik = g_strdup(uik);
 }
 
+void hash_value_set_note (HashValue *self, gchar *note)
+{
+    self->note = g_strdup(note);
+}
+
+void hash_value_set_entry_index (HashValue *self, EntryIndex entry_number)
+{
+    self->entry_number = entry_number;
+}
+
+gchar* hash_value_get_uik (HashValue *self)
+{
+    return self->uik;
+}
+
+gchar* hash_value_get_note (HashValue *self)
+{
+    return self->note;
+}
+
+EntryIndex hash_value_get_entry_index (HashValue *self)
+{
+    return self->entry_number;
+}
+
 void hash_value_destroy (gpointer data)
 {
     HashValue *self = HASH_VALUE (data);
     g_free (self->uik);
+    g_free (self->note);
     g_list_free_full (self->list, locale_string_destroy);
 }
 
@@ -53,6 +79,8 @@ HashValue* hash_value_new (void)
     HashValue *hv = g_object_new(TYPE_HASH_VALUE, NULL);
     hv->list = NULL;
     hv->uik = NULL;
+    hv->note = NULL;
+    hv->entry_number = -1;
 }
 
 GType hash_value_get_type (void)

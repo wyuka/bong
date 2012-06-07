@@ -14,14 +14,17 @@ void translatable_read_file (Translatable *self, gchar *file_name)
     self->read_file (self->file_type, self, file_name);
 }
 
-void translatable_add_localestring (Translatable *self, gchar *uik, LocaleString *locale_string)
+void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar *uik, gchar *note, gchar *locale, gchar *string)
 {
+    LocaleString *locale_string = locale_string_new (locale, string);
     HashValue *v = g_hash_table_lookup (self->hash_table, uik);
     if (v == NULL)
     {
         gchar *t_uik = g_strdup(uik);
         v = hash_value_new ();
         hash_value_set_uik (v, t_uik);
+        hash_value_set_note (v, note);
+        hash_value_set_entry_index (v, entry_number);
         hash_value_add_localestring (v, locale_string);
         g_hash_table_insert (self->hash_table, t_uik, v);
     }
@@ -31,7 +34,7 @@ void translatable_add_localestring (Translatable *self, gchar *uik, LocaleString
     }
 }
 
-LocaleString* translatable_find_localestring (Translatable *self, gchar *uik, gchar *locale)
+gchar* translatable_get_string_for_uik (Translatable *self, gchar *uik, gchar *locale)
 {
     HashValue *v = g_hash_table_lookup (self->hash_table, uik);
     if (v == NULL)
@@ -39,7 +42,22 @@ LocaleString* translatable_find_localestring (Translatable *self, gchar *uik, gc
         return NULL;
     }
 
-    return hash_value_find_localestring (v, locale);
+    LocaleString *ls = hash_value_find_localestring (v, locale);
+    if (ls != NULL)
+    {
+        return locale_string_get_string (ls);
+    }
+}
+
+gchar* translatable_get_note_for_uik (Translatable *self, gchar *uik)
+{
+    HashValue *v = g_hash_table_lookup (self->hash_table, uik);
+    if (v == NULL)
+    {
+        return NULL;
+    }
+
+    return hash_value_get_note (v);
 }
 
 /* This is called when the class is initialized */
