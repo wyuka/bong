@@ -2,7 +2,7 @@
  * Copyright/Licensing information.
  */
 
-#include "type.h"
+#include "filetype.h"
 #include "translatable.h"
 
 #include <stdio.h>

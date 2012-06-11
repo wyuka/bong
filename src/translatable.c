@@ -7,7 +7,7 @@
 #include "translatable.h"
 #include "hashvalue.h"
 #include "localestring.h"
-#include "type.h"
+#include "filetype.h"
 
 /* Public methods */
 

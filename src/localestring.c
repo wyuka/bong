@@ -3,7 +3,6 @@
  */
 
 #include "localestring.h"
-#include "type.h"
 
 /* Public methods */
 

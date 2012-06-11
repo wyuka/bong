@@ -6,7 +6,7 @@
 #ifndef __TRANSLATABLE_H__
 #define __TRANSLATABLE_H__
 
-#include "type.h"
+#include "filetype.h"
 
 #include <glib-object.h>
 

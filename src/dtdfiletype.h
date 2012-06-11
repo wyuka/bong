@@ -6,8 +6,9 @@
 #ifndef __DTD_FILE_TYPE_H__
 #define __DTD_FILE_TYPE_H__
 
-#include "type.h"
+#include "filetype.h"
 struct _Translatable;
+typedef struct _Translatable Translatable;
 
 #include <glib-object.h>
 
@@ -45,6 +46,6 @@ void dtd_file_type_instance_init (GTypeInstance *instance, gpointer klass);
 /* Public methods */
 
 /* virtual public methods */
-void dtd_file_type_read_file (DtdFileType *self, struct _Translatable *tr, gchar *file_name);
+void dtd_file_type_read_file (DtdFileType *self, Translatable *tr, gchar *file_name);
 
 #endif /* __DTD_FILE_TYPE_H__ */

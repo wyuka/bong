@@ -2,8 +2,7 @@
  * Copyright/Licensing information.
  */
 
-#include "dtdfile.h"
-#include "type.h"
+#include "dtdfiletype.h"
 #include "translatable.h"
 
 #include <stdio.h>
