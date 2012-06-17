@@ -9,7 +9,19 @@
 
 void hash_value_add_localestring (HashValue *self, LocaleString *string)
 {
-    self->list = g_list_append (self->list, string);
+    GList *current = self->list;
+    gchar *locale = locale_string_get_locale(string);
+    while (current != NULL)
+    {
+        if (g_strcmp0 (locale_string_get_locale(current->data), locale) == 0)
+        {
+            locale_string_destroy(current->data);
+            self->list = g_list_remove_link(self->list, current);
+            break;
+        }
+        current = current->next;
+    }
+    self->list = g_list_prepend (self->list, string);
 }
 
 LocaleString* hash_value_find_localestring (HashValue *self, gchar *locale)

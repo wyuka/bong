@@ -30,6 +30,7 @@ struct _FileTypeClass
     GObjectClass parent_class;
 
     void (*read_file) (FileType *self, struct _Translatable *tr, gchar *fileName);
+    void (*write_file) (FileType *self, struct _Translatable *tr, gchar *fileName);
 };
 
 struct _FileType
@@ -50,5 +51,6 @@ void file_type_instance_init (GTypeInstance *instance, gpointer klass);
 
 /* virtual public methods */
 void file_type_read_file (FileType *self, struct _Translatable *tr, gchar *file_name);
+void file_type_write_file (FileType *self, struct _Translatable *tr, gchar *file_name);
 
 #endif /* __FILE_TYPE_H__ */

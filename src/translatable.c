@@ -16,9 +16,14 @@ void translatable_read_file (Translatable *self, gchar *file_name)
     self->read_file (self->file_type, self, file_name);
 }
 
+void translatable_write_file (Translatable *self, gchar *file_name)
+{
+    self->write_file (self->file_type, self, file_name);
+}
+
 void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar *uik, gchar *note, gchar *locale, gchar *string)
 {
-    LocaleString *locale_string = locale_string_new (locale, string);
+    LocaleString *locale_string;
     HashValue *v = g_hash_table_lookup (self->hash_table, uik);
     if (v == NULL)
     {
@@ -27,14 +32,62 @@ void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar 
         hash_value_set_uik (v, t_uik);
         hash_value_set_note (v, note);
         hash_value_set_entry_index (v, entry_number);
-        hash_value_add_localestring (v, locale_string);
+        if (entry_number >= 0 && entry_number <= MAX_ENTRY_NUMBER)
+            self->entry_array[entry_number] = v;
+        if (locale && string)
+        {
+            locale_string = locale_string_new (locale, string);
+            hash_value_add_localestring (v, locale_string);
+        }
         g_hash_table_insert (self->hash_table, t_uik, v);
-        self->entry_array[entry_number] = v;
+        self->entries_count++;
     }
     else
     {
+        if (note != NULL)
+            hash_value_set_note(v, note);
+        if (entry_number >= 0 && entry_number <= MAX_ENTRY_NUMBER)
+        {
+            hash_value_set_entry_index (v, entry_number);
+            self->entry_array[entry_number] = v;
+        }
+        if (locale && string)
+        {
+            locale_string = locale_string_new (locale, string);
+            hash_value_add_localestring (v, locale_string);
+        }
+    }
+}
+
+void translatable_set_string_for_uik (Translatable *self, gchar *uik, gchar *locale, gchar *string)
+{
+    LocaleString *locale_string;
+    HashValue *v = g_hash_table_lookup (self->hash_table, uik);
+    if (v == NULL)
+        return;
+    if (locale && string)
+    {
+        locale_string = locale_string_new (locale, string);
         hash_value_add_localestring (v, locale_string);
     }
+}
+
+void translatable_set_note (Translatable *self, gchar *uik, gchar *note)
+{
+    HashValue *v = g_hash_table_lookup (self->hash_table, uik);
+    if (v == NULL)
+        return;
+    hash_value_set_note (v, note);
+}
+
+void translatable_set_entry_index (Translatable *self, gchar *uik, EntryIndex entry_number)
+{
+    HashValue *v = g_hash_table_lookup (self->hash_table, uik);
+    if (v == NULL)
+        return;
+    hash_value_set_entry_index (v, entry_number);
+    if (entry_number >= 0 && entry_number <= MAX_ENTRY_NUMBER)
+        self->entry_array[entry_number] = v;
 }
 
 gchar* translatable_get_string_for_uik (Translatable *self, gchar *uik, gchar *locale)
@@ -76,6 +129,9 @@ gchar* translatable_get_note_for_uik (Translatable *self, gchar *uik)
 
 gchar* translatable_get_string_for_entry_index (Translatable *self, EntryIndex entry_number, gchar *locale)
 {
+    if (entry_number < 0)
+        return NULL;
+
     HashValue *v = self->entry_array[entry_number];
     if (v == NULL)
     {
@@ -91,6 +147,9 @@ gchar* translatable_get_string_for_entry_index (Translatable *self, EntryIndex e
 
 gchar* translatable_get_uik_for_entry_index (Translatable *self, EntryIndex entry_number)
 {
+    if (entry_number < 0)
+        return NULL;
+
     HashValue *v = self->entry_array[entry_number];
     if (v == NULL)
     {
@@ -102,6 +161,9 @@ gchar* translatable_get_uik_for_entry_index (Translatable *self, EntryIndex entr
 
 gchar* translatable_get_note_for_entry_index (Translatable *self, EntryIndex entry_number)
 {
+    if (entry_number < 0)
+        return NULL;
+
     HashValue *v = self->entry_array[entry_number];
     if (v == NULL)
     {
@@ -127,9 +189,16 @@ void translatable_instance_init (GTypeInstance *instance, gpointer klass)
 void translatable_init (Translatable *self, FileType *file_type)
 {
     self->read_file = (void *)(FILE_TYPE_GET_CLASS (file_type)->read_file);
+    self->write_file = (void *)(FILE_TYPE_GET_CLASS (file_type)->write_file);
     self->file_type = file_type;
     self->hash_table = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, hash_value_destroy);
     self->entry_array = g_malloc0 (sizeof(HashValue*) * MAX_ENTRY_NUMBER + 1);
+    self->entries_count = 0;
+}
+
+int translatable_get_entries_count (Translatable *self)
+{
+    return self->entries_count;
 }
 
 Translatable* translatable_new (void)

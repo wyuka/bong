@@ -14,6 +14,11 @@ void file_type_read_file (FileType *self, Translatable *tr, gchar *file_name)
     FILE_TYPE_GET_CLASS (self)->read_file (self, tr, file_name);
 }
 
+void file_type_write_file (FileType *self, Translatable *tr, gchar *file_name)
+{
+    FILE_TYPE_GET_CLASS (self)->write_file (self, tr, file_name);
+}
+
 /* This is called when the class is initialized */
 void file_type_class_init (gpointer klass, gpointer klass_data)
 {
@@ -21,6 +26,7 @@ void file_type_class_init (gpointer klass, gpointer klass_data)
 
     /* pure virtual methods */
     this_class->read_file = 0;
+    this_class->write_file = 0;
 }
 
 /* this is the constructor */
