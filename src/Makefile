@@ -1,4 +1,4 @@
-all: test1 test2
+all: test1 test2 test3
 test1: test1.o translatable.o filetype.o propertiesfiletype.o localestring.o hashvalue.o
 	gcc test1.o translatable.o filetype.o propertiesfiletype.o localestring.o hashvalue.o -o test1 `pkg-config --cflags --libs gobject-2.0`
 test1.o: test1.c translatable.h dtdfiletype.h
@@ -6,8 +6,13 @@ test1.o: test1.c translatable.h dtdfiletype.h
 
 test2: test2.o translatable.o filetype.o propertiesfiletype.o localestring.o hashvalue.o
 	gcc test2.o translatable.o filetype.o propertiesfiletype.o localestring.o hashvalue.o -o test2 `pkg-config --cflags --libs gobject-2.0`
-test2.o: test2.c translatable.h dtdfiletype.h
+test2.o: test2.c translatable.h propertiesfiletype.h
 	gcc -c test2.c -o test2.o `pkg-config --cflags gobject-2.0`
+
+test3: test3.o translatable.o filetype.o dtdfiletype.o localestring.o hashvalue.o
+	gcc test3.o translatable.o filetype.o dtdfiletype.o localestring.o hashvalue.o -o test3 `pkg-config --cflags --libs gobject-2.0`
+test3.o: test3.c translatable.h dtdfiletype.h
+	gcc -c test3.c -o test3.o `pkg-config --cflags gobject-2.0`
 
 translatable.o: translatable.c filetype.h translatable.h hashvalue.h
 	gcc -c translatable.c -o translatable.o `pkg-config --cflags gobject-2.0`
