@@ -47,6 +47,8 @@ void dtd_file_type_instance_init (GTypeInstance *instance, gpointer klass);
 
 /* virtual public methods */
 void dtd_file_type_read_file (DtdFileType *self, Translatable *tr, gchar *file_name);
+void dtd_file_type_read_contents (DtdFileType *self, Translatable *tr, gchar *input_contents);
 void dtd_file_type_write_file (DtdFileType *self, Translatable *tr, gchar *file_name);
+gchar* dtd_file_type_write_contents (DtdFileType *self, Translatable *tr, gchar *input_contents);
 
 #endif /* __DTD_FILE_TYPE_H__ */

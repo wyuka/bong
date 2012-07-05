@@ -31,6 +31,8 @@ struct _FileTypeClass
 
     void (*read_file) (FileType *self, struct _Translatable *tr, gchar *fileName);
     void (*write_file) (FileType *self, struct _Translatable *tr, gchar *fileName);
+    void (*read_contents) (FileType *self, struct _Translatable *tr, gchar *input_contents);
+    gchar* (*write_contents) (FileType *self, struct _Translatable *tr, gchar *input_contents);
 };
 
 struct _FileType
@@ -51,6 +53,8 @@ void file_type_instance_init (GTypeInstance *instance, gpointer klass);
 
 /* virtual public methods */
 void file_type_read_file (FileType *self, struct _Translatable *tr, gchar *file_name);
+void file_type_read_contents (FileType *self, struct _Translatable *tr, gchar *input_contents);
 void file_type_write_file (FileType *self, struct _Translatable *tr, gchar *file_name);
+gchar* file_type_write_contents (FileType *self, struct _Translatable *tr, gchar *input_contents);
 
 #endif /* __FILE_TYPE_H__ */

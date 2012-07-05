@@ -16,9 +16,19 @@ void translatable_read_file (Translatable *self, gchar *file_name)
     self->read_file (self->file_type, self, file_name);
 }
 
+void translatable_read_contents (Translatable *self, gchar *input_contents)
+{
+    self->read_contents (self->file_type, self, input_contents);
+}
+
 void translatable_write_file (Translatable *self, gchar *file_name)
 {
     self->write_file (self->file_type, self, file_name);
+}
+
+gchar* translatable_write_contents (Translatable *self, gchar *input_contents)
+{
+    return self->write_contents (self->file_type, self, input_contents);
 }
 
 void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar *uik, gchar *note, gchar *locale, gchar *string)
@@ -189,7 +199,9 @@ void translatable_instance_init (GTypeInstance *instance, gpointer klass)
 void translatable_init (Translatable *self, FileType *file_type)
 {
     self->read_file = (void *)(FILE_TYPE_GET_CLASS (file_type)->read_file);
+    self->read_contents = (void *)(FILE_TYPE_GET_CLASS (file_type)->read_contents);
     self->write_file = (void *)(FILE_TYPE_GET_CLASS (file_type)->write_file);
+    self->write_contents = (gchar* *)(FILE_TYPE_GET_CLASS (file_type)->write_contents);
     self->file_type = file_type;
     self->hash_table = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, hash_value_destroy);
     self->entry_array = g_malloc0 (sizeof(HashValue*) * MAX_ENTRY_NUMBER + 1);

@@ -9,9 +9,6 @@
 #include <stdio.h>
 #include <string.h>
 
-void properties_file_type_read_text(gchar *input_contents, Translatable *tr);
-gchar* properties_file_type_write_text(gchar *input_contents, Translatable *tr);
-
 /* Public methods */
 
 void properties_file_type_read_file (PropertiesFileType *self, Translatable *tr, gchar *file_name)
@@ -20,7 +17,7 @@ void properties_file_type_read_file (PropertiesFileType *self, Translatable *tr,
     GError *read_error = NULL;
     gsize length = -1;
     g_file_get_contents(file_name, &input_contents, &length, &read_error);
-    properties_file_type_read_text (input_contents, tr);
+    properties_file_type_read_contents (self, tr, input_contents);
     g_free (input_contents);
 }
 
@@ -31,7 +28,7 @@ void properties_file_type_write_file (PropertiesFileType *self, Translatable *tr
     GError *read_error = NULL;
     gsize length = -1;
     g_file_get_contents(file_name, &input_contents, &length, &read_error);
-    output_contents = properties_file_type_write_text (input_contents, tr);
+    output_contents = properties_file_type_write_contents (self, tr, input_contents);
     g_free (input_contents);
     g_printf("%s", output_contents);
     g_free(output_contents);
@@ -44,7 +41,9 @@ void properties_file_type_class_init (gpointer klass, gpointer klass_data)
 
     /* virtual methods */
     parent_class->read_file = (void *)(properties_file_type_read_file);
+    parent_class->read_contents = (void *)(properties_file_type_read_contents);
     parent_class->write_file = (void *)(properties_file_type_write_file);
+    parent_class->write_contents = (void *)(properties_file_type_write_contents);
 }
 
 /* this is the constructor */
@@ -81,7 +80,7 @@ GType properties_file_type_get_type (void)
 
 /* Private methods */
 
-void properties_file_type_read_text(gchar *input_contents, Translatable *tr)
+void properties_file_type_read_contents (PropertiesFileType *self, Translatable *tr, gchar *input_contents)
 {
     gchar *equalpos, *key, *value, *stripped_line, *note = NULL;
     GList *key_list = NULL, *key_list_for_note = NULL, *note_list_for_keys = NULL, *note_list = NULL;
@@ -200,7 +199,7 @@ void properties_file_type_read_text(gchar *input_contents, Translatable *tr)
     g_list_free_full(key_list, g_free);
 }
 
-gchar* properties_file_type_write_text(gchar *input_contents, Translatable *tr)
+gchar* properties_file_type_write_contents(PropertiesFileType *self, Translatable *tr, gchar *input_contents)
 {
     gchar *equalpos, *key, *value, *stripped_line, *output_contents = g_strdup(""), *tmp;
     gchar *end, *line = input_contents;

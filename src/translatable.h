@@ -45,7 +45,9 @@ struct _Translatable
     int entries_count;
     struct _HashValue **entry_array;
     void (*read_file) (FileType *file_type, Translatable *self, gchar *fileName);
+    void (*read_contents) (FileType *file_type, Translatable *self, gchar *input_contents);
     void (*write_file) (FileType *file_type, Translatable *self, gchar *fileName);
+    gchar* (*write_contents) (FileType *file_type, Translatable *self, gchar *input_contents);
 };
 
 GType translatable_get_type (void);
@@ -59,7 +61,9 @@ void translatable_init (Translatable *self, FileType *file_type);
 void translatable_destroy (gpointer data);
 
 void translatable_read_file (Translatable *self, gchar *file_name);
+void translatable_read_contents (Translatable *self, gchar *input_contents);
 void translatable_write_file (Translatable *self, gchar *file_name);
+gchar* translatable_write_contents (Translatable *self, gchar *input_contents);
 
 /* to insert empty, set locale and string = NULL
  * if you want, you can set entry_number = -1 (to replace later)

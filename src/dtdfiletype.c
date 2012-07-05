@@ -10,9 +10,6 @@
 #include <glib.h>
 #include <string.h>
 
-void dtd_file_type_read_text(gchar *input_contents, Translatable *tr);
-gchar* dtd_file_type_write_text(gchar *input_contents, Translatable *tr);
-
 /* Public methods */
 
 void dtd_file_type_read_file (DtdFileType *self, Translatable *tr, gchar *file_name)
@@ -21,7 +18,7 @@ void dtd_file_type_read_file (DtdFileType *self, Translatable *tr, gchar *file_n
     GError *read_error = NULL;
     gsize length = -1;
     g_file_get_contents(file_name, &input_contents, &length, &read_error);
-    dtd_file_type_read_text (input_contents, tr);
+    dtd_file_type_read_contents (self, tr, input_contents);
     g_free (input_contents);
 }
 
@@ -32,7 +29,7 @@ void dtd_file_type_write_file (DtdFileType *self, Translatable *tr, gchar *file_
     GError *read_error = NULL;
     gsize length = -1;
     g_file_get_contents(file_name, &input_contents, &length, &read_error);
-    output_contents = dtd_file_type_write_text (input_contents, tr);
+    output_contents = dtd_file_type_write_contents (self, tr, input_contents);
     g_free (input_contents);
     g_printf("%s", output_contents);
     g_free(output_contents);
@@ -45,7 +42,9 @@ void dtd_file_type_class_init (gpointer klass, gpointer klass_data)
 
     /* virtual methods */
     parent_class->read_file = (void *)(dtd_file_type_read_file);
+    parent_class->read_contents = (void *)(dtd_file_type_read_contents);
     parent_class->write_file = (void *)(dtd_file_type_write_file);
+    parent_class->write_contents = (void *)(dtd_file_type_write_contents);
 }
 
 /* this is the constructor */
@@ -80,7 +79,7 @@ GType dtd_file_type_get_type (void)
     return type;
 }
 
-void dtd_file_type_read_text(gchar *input_contents, Translatable *tr)
+void dtd_file_type_read_contents (DtdFileType *self, Translatable *tr, gchar *input_contents)
 {
     int entry_number = -1;
     GError *error = 0;
@@ -126,7 +125,7 @@ void dtd_file_type_read_text(gchar *input_contents, Translatable *tr)
     g_regex_unref(string_regex);
 }
 
-gchar* dtd_file_type_write_text(gchar *input_contents, Translatable *tr)
+gchar* dtd_file_type_write_contents (DtdFileType *self, Translatable *tr, gchar *input_contents)
 {
     GError *error = 0;
     GMatchInfo *match_info;

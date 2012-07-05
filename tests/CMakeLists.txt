@@ -10,6 +10,10 @@ set(test_properties_SRCS test_properties.c)
 add_executable(test_properties ${test_properties_SRCS})
 target_link_libraries(test_properties ${GOBJECT_LIBRARIES} ${GLIB2_LIBRARIES} ${BONG_LIBRARIES})
 
+set(test_properties_2_SRCS test_properties_2.c)
+add_executable(test_properties_2 ${test_properties_2_SRCS})
+target_link_libraries(test_properties_2 ${GOBJECT_LIBRARIES} ${GLIB2_LIBRARIES} ${BONG_LIBRARIES})
+
 set(test_dtd_SRCS test_dtd.c)
 add_executable(test_dtd ${test_dtd_SRCS})
 target_link_libraries(test_dtd ${GOBJECT_LIBRARIES} ${GLIB2_LIBRARIES} ${BONG_LIBRARIES})

@@ -47,6 +47,8 @@ void properties_file_type_instance_init (GTypeInstance *instance, gpointer klass
 
 /* virtual public methods */
 void properties_file_type_read_file (PropertiesFileType *self, Translatable *tr, gchar *file_name);
+void properties_file_type_read_contents (PropertiesFileType *self, Translatable *tr, gchar *input_contents);
 void properties_file_type_write_file (PropertiesFileType *self, Translatable *tr, gchar *file_name);
+gchar* properties_file_type_write_contents (PropertiesFileType *self, Translatable *tr, gchar *input_contents);
 
 #endif /* __PROPERTIES_FILE_TYPE_H__ */
