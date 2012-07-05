@@ -27,4 +27,4 @@ hashvalue.o: hashvalue.c hashvalue.h localestring.h
 localestring.o: localestring.c localestring.h
 	gcc -c localestring.c -o localestring.o `pkg-config --cflags gobject-2.0`
 clean:
-	rm -f *.o test1 test2
+	rm -f *.o test1 test2 test3
