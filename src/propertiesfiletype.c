@@ -49,7 +49,6 @@ void properties_file_type_class_init (gpointer klass, gpointer klass_data)
 /* this is the constructor */
 void properties_file_type_instance_init (GTypeInstance *instance, gpointer klass)
 {
-    //properties_file_type_read_file(instance, "yow");
     /* not needed atm */
 }
 

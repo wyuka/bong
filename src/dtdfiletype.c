@@ -30,8 +30,8 @@ void dtd_file_type_write_file (DtdFileType *self, Translatable *tr, gchar *file_
     gsize length = -1;
     g_file_get_contents(file_name, &input_contents, &length, &read_error);
     output_contents = dtd_file_type_write_contents (self, tr, input_contents);
+    g_printf("%s\n", output_contents);
     g_free (input_contents);
-    g_printf("%s", output_contents);
     g_free(output_contents);
 }
 
@@ -50,7 +50,6 @@ void dtd_file_type_class_init (gpointer klass, gpointer klass_data)
 /* this is the constructor */
 void dtd_file_type_instance_init (GTypeInstance *instance, gpointer klass)
 {
-    //dtd_file_type_read_file(instance, "yow");
     /* not needed atm */
 }
 
@@ -92,7 +91,6 @@ void dtd_file_type_read_contents (DtdFileType *self, Translatable *tr, gchar *in
     {
         gchar *key = g_match_info_fetch(match_info, 1);
         gchar *value = g_match_info_fetch(match_info, 2);
-        //g_printf("%s = %s\n", key, value);
         entry_number++;
         translatable_add_entry (tr, entry_number, key, NULL, "en", value);
         g_match_info_next(match_info, NULL);
@@ -109,7 +107,6 @@ void dtd_file_type_read_contents (DtdFileType *self, Translatable *tr, gchar *in
         gchar *key = g_match_info_fetch(match_info, 1);
         GList *key_list = find_elements_for_note(key, strlen(key));
         gchar *value = g_match_info_fetch(match_info, 2);
-        //g_printf("%s = %s\n", key, value);
         GList *key_item = key_list;
         while (key_item != NULL)
         {
