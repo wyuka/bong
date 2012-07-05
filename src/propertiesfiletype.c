@@ -189,7 +189,7 @@ void properties_file_type_read_contents (PropertiesFileType *self, Translatable 
     GList *note_item = note_list_for_keys, *key_item = key_list;
     while (key_item != NULL)
     {
-        translatable_set_note(tr, key_item->data, note_item->data);
+        translatable_set_note_for_uik (tr, key_item->data, note_item->data);
         key_item = key_item->next;
         note_item = note_item->next;
     }

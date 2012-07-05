@@ -82,7 +82,26 @@ void translatable_set_string_for_uik (Translatable *self, gchar *uik, gchar *loc
     }
 }
 
-void translatable_set_note (Translatable *self, gchar *uik, gchar *note)
+void translatable_set_string_for_entry_index (Translatable *self, EntryIndex entry_number, gchar *locale, gchar *string)
+{
+    LocaleString *locale_string;
+
+    if (entry_number < 0)
+        return;
+
+    HashValue *v = self->entry_array[entry_number];
+    if (v == NULL)
+    {
+        return;
+    }
+    if (locale && string)
+    {
+        locale_string = locale_string_new (locale, string);
+        hash_value_add_localestring (v, locale_string);
+    }
+}
+
+void translatable_set_note_for_uik (Translatable *self, gchar *uik, gchar *note)
 {
     HashValue *v = g_hash_table_lookup (self->hash_table, uik);
     if (v == NULL)
@@ -90,7 +109,20 @@ void translatable_set_note (Translatable *self, gchar *uik, gchar *note)
     hash_value_set_note (v, note);
 }
 
-void translatable_set_entry_index (Translatable *self, gchar *uik, EntryIndex entry_number)
+void translatable_set_note_for_entry_index (Translatable *self, EntryIndex entry_number, gchar *note)
+{
+    if (entry_number < 0)
+        return;
+    
+    HashValue *v = self->entry_array[entry_number];
+    if (v == NULL)
+    {
+        return;
+    }
+    hash_value_set_note (v, note);
+}
+
+void translatable_set_entry_index_for_uik (Translatable *self, gchar *uik, EntryIndex entry_number)
 {
     HashValue *v = g_hash_table_lookup (self->hash_table, uik);
     if (v == NULL)
@@ -198,10 +230,10 @@ void translatable_instance_init (GTypeInstance *instance, gpointer klass)
 /* initializes Translatable object by specifying the file type */
 void translatable_init (Translatable *self, FileType *file_type)
 {
-    self->read_file = (void *)(FILE_TYPE_GET_CLASS (file_type)->read_file);
-    self->read_contents = (void *)(FILE_TYPE_GET_CLASS (file_type)->read_contents);
-    self->write_file = (void *)(FILE_TYPE_GET_CLASS (file_type)->write_file);
-    self->write_contents = (gchar* *)(FILE_TYPE_GET_CLASS (file_type)->write_contents);
+    self->read_file = FILE_TYPE_GET_CLASS (file_type)->read_file;
+    self->read_contents = FILE_TYPE_GET_CLASS (file_type)->read_contents;
+    self->write_file = FILE_TYPE_GET_CLASS (file_type)->write_file;
+    self->write_contents = FILE_TYPE_GET_CLASS (file_type)->write_contents;
     self->file_type = file_type;
     self->hash_table = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, hash_value_destroy);
     self->entry_array = g_malloc0 (sizeof(HashValue*) * MAX_ENTRY_NUMBER + 1);

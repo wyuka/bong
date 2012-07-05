@@ -113,7 +113,7 @@ void dtd_file_type_read_contents (DtdFileType *self, Translatable *tr, gchar *in
         GList *key_item = key_list;
         while (key_item != NULL)
         {
-            translatable_set_note (tr, key_item->data, value);
+            translatable_set_note_for_uik (tr, key_item->data, value);
             key_item = key_item->next;
         }
         g_list_free_full(key_list, g_free);
