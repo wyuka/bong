@@ -4,12 +4,13 @@
 
 #include "propertiesfiletype.h"
 #include "translatable.h"
+#include "utils.h"
 
 #include <stdio.h>
 #include <string.h>
 
-void process_lines_for_read(gchar *input_contents, Translatable *tr);
-gchar* process_lines_for_write(gchar *input_contents, Translatable *tr);
+void properties_file_type_read_text(gchar *input_contents, Translatable *tr);
+gchar* properties_file_type_write_text(gchar *input_contents, Translatable *tr);
 
 /* Public methods */
 
@@ -19,7 +20,7 @@ void properties_file_type_read_file (PropertiesFileType *self, Translatable *tr,
     GError *read_error = NULL;
     gsize length = -1;
     g_file_get_contents(file_name, &input_contents, &length, &read_error);
-    process_lines_for_read (input_contents, tr);
+    properties_file_type_read_text (input_contents, tr);
     g_free (input_contents);
 }
 
@@ -30,7 +31,7 @@ void properties_file_type_write_file (PropertiesFileType *self, Translatable *tr
     GError *read_error = NULL;
     gsize length = -1;
     g_file_get_contents(file_name, &input_contents, &length, &read_error);
-    output_contents = process_lines_for_write (input_contents, tr);
+    output_contents = properties_file_type_write_text (input_contents, tr);
     g_free (input_contents);
     g_printf("%s", output_contents);
     g_free(output_contents);
@@ -80,28 +81,7 @@ GType properties_file_type_get_type (void)
 
 /* Private methods */
 
-GList* find_elements_for_note(gchar *start, int length)
-{
-    gchar *comma = NULL, *keystr = start;
-    GList *next = NULL;
-    int lengthleft = length;
-    while(comma = g_strstr_len(keystr, lengthleft, ","))
-    {
-        *comma = '\0';
-        next = g_list_prepend(next, g_strdup(keystr));
-        *comma = ',';
-        lengthleft -= comma - keystr + 1;
-        keystr = comma + 1;
-        if (keystr >= start + length)
-            return;
-    }
-    start[length] = '\0';
-    next = g_list_prepend(next, g_strdup(keystr));
-    start[length] = ')';
-    return next;
-}
-
-void process_lines_for_read(gchar *input_contents, Translatable *tr)
+void properties_file_type_read_text(gchar *input_contents, Translatable *tr)
 {
     gchar *equalpos, *key, *value, *stripped_line, *note = NULL;
     GList *key_list = NULL, *key_list_for_note = NULL, *note_list_for_keys = NULL, *note_list = NULL;
@@ -220,7 +200,7 @@ void process_lines_for_read(gchar *input_contents, Translatable *tr)
     g_list_free_full(key_list, g_free);
 }
 
-gchar* process_lines_for_write(gchar *input_contents, Translatable *tr)
+gchar* properties_file_type_write_text(gchar *input_contents, Translatable *tr)
 {
     gchar *equalpos, *key, *value, *stripped_line, *output_contents = g_strdup(""), *tmp;
     gchar *end, *line = input_contents;

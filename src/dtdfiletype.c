@@ -4,13 +4,14 @@
 
 #include "dtdfiletype.h"
 #include "translatable.h"
+#include "utils.h"
 
 #include <stdio.h>
 #include <glib.h>
 #include <string.h>
 
-void process_lines_for_read(gchar *input_contents, Translatable *tr);
-gchar* process_lines_for_write(gchar *input_contents, Translatable *tr);
+void dtd_file_type_read_text(gchar *input_contents, Translatable *tr);
+gchar* dtd_file_type_write_text(gchar *input_contents, Translatable *tr);
 
 /* Public methods */
 
@@ -20,7 +21,7 @@ void dtd_file_type_read_file (DtdFileType *self, Translatable *tr, gchar *file_n
     GError *read_error = NULL;
     gsize length = -1;
     g_file_get_contents(file_name, &input_contents, &length, &read_error);
-    process_lines_for_read (input_contents, tr);
+    dtd_file_type_read_text (input_contents, tr);
     g_free (input_contents);
 }
 
@@ -31,7 +32,7 @@ void dtd_file_type_write_file (DtdFileType *self, Translatable *tr, gchar *file_
     GError *read_error = NULL;
     gsize length = -1;
     g_file_get_contents(file_name, &input_contents, &length, &read_error);
-    output_contents = process_lines_for_write (input_contents, tr);
+    output_contents = dtd_file_type_write_text (input_contents, tr);
     g_free (input_contents);
     g_printf("%s", output_contents);
     g_free(output_contents);
@@ -79,28 +80,7 @@ GType dtd_file_type_get_type (void)
     return type;
 }
 
-GList* find_elements_for_note(gchar *start, int length)
-{
-    gchar *comma = NULL, *keystr = start;
-    GList *next = NULL;
-    int lengthleft = length;
-    while(comma = g_strstr_len(keystr, lengthleft, ","))
-    {
-        *comma = '\0';
-        next = g_list_prepend(next, g_strdup(keystr));
-        *comma = ',';
-        lengthleft -= comma - keystr + 1;
-        keystr = comma + 1;
-        if (keystr >= start + length)
-            return;
-    }
-    start[length] = '\0';
-    next = g_list_prepend(next, g_strdup(keystr));
-    start[length] = ')';
-    return next;
-}
-
-void process_lines_for_read(gchar *input_contents, Translatable *tr)
+void dtd_file_type_read_text(gchar *input_contents, Translatable *tr)
 {
     int entry_number = -1;
     GError *error = 0;
@@ -146,7 +126,7 @@ void process_lines_for_read(gchar *input_contents, Translatable *tr)
     g_regex_unref(string_regex);
 }
 
-gchar* process_lines_for_write(gchar *input_contents, Translatable *tr)
+gchar* dtd_file_type_write_text(gchar *input_contents, Translatable *tr)
 {
     GError *error = 0;
     GMatchInfo *match_info;
