@@ -31,6 +31,10 @@ struct _HashValueClass
     GTypeClass gtypeclass;
 };
 
+/* this class encapsulates a UIK, a note, an entry index, and a list of
+ * "LocaleString"s, which are in essence, pairs of locale and string.
+ * Always, only one string is stored for a specific locale.
+ */
 struct _HashValue
 {
     GObject parent_instance;
@@ -49,17 +53,40 @@ void hash_value_class_init (gpointer klass, gpointer klass_data);
 void hash_value_instance_init (GTypeInstance *instance, gpointer klass);
 
 /* public functions */
+
+/* convenience function for creating HashValue using GObject mechanism */
 HashValue* hash_value_new (void);
+/* destructor for HashValue object */
 void hash_value_destroy (gpointer data);
 
+/* add the LocaleString to the hashvalue, will replace any existing entry
+ * with same locale
+ */
 void hash_value_add_localestring (HashValue *self, LocaleString *string);
+
+/* returns a LocaleString for a specified locale */
 LocaleString* hash_value_find_localestring (HashValue *self, gchar *locale);
 
+/* sets UIK for a HashValue
+ * creates a local copy of UIK, so argument may be free'd
+ */
 void hash_value_set_uik (HashValue *self, gchar *uik);
+
+/* sets note for a HashValue
+ * creates a local copy of note, so argument may be free'd
+ */
 void hash_value_set_note (HashValue *self, gchar *note);
+
+/* sets entry index for a HashValue */
 void hash_value_set_entry_index (HashValue *self, EntryIndex entry_number);
+
+/* returns the UIK for a HashValue */
 gchar* hash_value_get_uik (HashValue *self);
+
+/* returns the note for a HashValue */
 gchar* hash_value_get_note (HashValue *self);
+
+/* returns the EntryIndex for a HashValue */
 EntryIndex hash_value_get_entry_index (HashValue *self);
 
 #endif /* __HASH_VALUE_H__ */

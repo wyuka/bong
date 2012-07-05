@@ -24,11 +24,16 @@ struct _Translatable;
 typedef struct _FileType FileType;
 typedef struct _FileTypeClass FileTypeClass;
 
+/* serves as a virtual base class,
+ * or an interface, for different file formats
+ * which have their own r/w operations
+ */
 struct _FileTypeClass
 {
     GTypeClass gtypeclass;
     GObjectClass parent_class;
 
+    /* vtable */
     void (*read_file) (FileType *self, struct _Translatable *tr, gchar *fileName);
     void (*write_file) (FileType *self, struct _Translatable *tr, gchar *fileName);
     void (*read_contents) (FileType *self, struct _Translatable *tr, gchar *input_contents);
@@ -39,9 +44,6 @@ struct _FileType
 {
     GObject parent_instance;
     GTypeInstance gtype;
-
-    /* private */
-    gchar* m_fileTypeName;
 };
 
 GType file_type_get_type (void);
@@ -52,9 +54,21 @@ void file_type_instance_init (GTypeInstance *instance, gpointer klass);
 /* Public methods */
 
 /* virtual public methods */
+
+/* read a file with given file name, and store entries into a Translatable object */
 void file_type_read_file (FileType *self, struct _Translatable *tr, gchar *file_name);
+
+/* parse the contents given in a string, and store entries into a Translatable object */
 void file_type_read_contents (FileType *self, struct _Translatable *tr, gchar *input_contents);
+
+/* read a file with given file name, modify it according to the entries
+ * in Translatable object, and write to a different file */
 void file_type_write_file (FileType *self, struct _Translatable *tr, gchar *file_name);
+
+/* parse the contents given in a string, modify it according to the entries
+ * in Translatable object, and return as an allocated string.
+ * The output must be manually free'd.
+ */
 gchar* file_type_write_contents (FileType *self, struct _Translatable *tr, gchar *input_contents);
 
 #endif /* __FILE_TYPE_H__ */

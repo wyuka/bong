@@ -42,9 +42,13 @@ struct _Translatable
     GTypeInstance gtype;
 
     /* private */
+    /* hash table stores hashvalue entries */
     GHashTable *hash_table;
+    /* the file type being used determines the function calls made for read/write ops */
     FileType *file_type;
+    /* stores number of entries */
     int entries_count;
+    /* an additional array that allows O(1) access by entry index */
     struct _HashValue **entry_array;
 
     /* vtable */
@@ -65,7 +69,7 @@ void translatable_instance_init (GTypeInstance *instance, gpointer klass);
  */
 
 /* Return a newly created Translatable object.
- * Is essentially a shorthand for creating it with GObject */
+ * Is a convenience function for creating it with GObject */
 Translatable* translatable_new (void);
 
 /* Initialize a Translatable object

@@ -1,0 +1,3 @@
+SET(BONG_DTD_LIBRARIES "@LIBPATH@/@LIB_OUT_NAME@" CACHE FILEPATH "Bong localization library - Mozilla DTD Backend")
+SET(BONG_DTD_INCLUDE_DIR "@INCLUDE_DIRECTORY@" CACHE PATH "Include path for Bong localization library - Mozilla DTD Backend")
+SET(BONG_DTD_FOUND "TRUE")

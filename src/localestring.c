@@ -18,9 +18,9 @@ void locale_string_instance_init (GTypeInstance *instance, gpointer klass)
     /* not needed atm */
 }
 
-/* initializes LocaleString object by specifying the file type */
 void locale_string_destroy (gpointer data)
 {
+    /* free the allocated strings for locale and string */
     LocaleString *self = LOCALE_STRING (data);
     g_free(self->locale);
     g_free(self->string);
@@ -28,6 +28,9 @@ void locale_string_destroy (gpointer data)
 
 LocaleString* locale_string_new (gchar *locale, gchar *string)
 {
+    /* create new LocaleString using GObject, then set the
+     * locale and string
+     */
     LocaleString* ls = g_object_new(TYPE_LOCALE_STRING, NULL);
     locale_string_set_locale (ls, locale);
     locale_string_set_string (ls, string);
@@ -56,6 +59,7 @@ gchar* locale_string_get_string (LocaleString *self)
     return self->string;
 }
 
+/* boilerplate code */
 GType locale_string_get_type (void)
 {
     static GType type = 0;

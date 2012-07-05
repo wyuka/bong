@@ -32,6 +32,9 @@ struct _DtdFileTypeClass
     FileTypeClass parent_class;
 };
 
+/* this class implements the FileType interface.
+ * This backend is for reading/writing Mozilla DTD files.
+ */
 struct _DtdFileType
 {
     FileType parent_instance;
@@ -45,10 +48,18 @@ void dtd_file_type_instance_init (GTypeInstance *instance, gpointer klass);
 
 /* Public methods */
 
-/* virtual public methods */
+/* reimplemented public methods */
+
+/* reimplements file_type_read_file */
 void dtd_file_type_read_file (DtdFileType *self, Translatable *tr, gchar *file_name);
+
+/* reimplements file_type_read_contents */
 void dtd_file_type_read_contents (DtdFileType *self, Translatable *tr, gchar *input_contents);
+
+/* reimplements file_type_write_file */
 void dtd_file_type_write_file (DtdFileType *self, Translatable *tr, gchar *file_name);
+
+/* reimplements file_type_write_contents */
 gchar* dtd_file_type_write_contents (DtdFileType *self, Translatable *tr, gchar *input_contents);
 
 #endif /* __DTD_FILE_TYPE_H__ */

@@ -1,8 +1,6 @@
 SET(    bong_SRC
         translatable.c
         filetype.c
-        dtdfiletype.c
-        propertiesfiletype.c
         hashvalue.c
         localestring.c
         utils.c
@@ -10,9 +8,9 @@ SET(    bong_SRC
 
 SET(    bong_HEADERS
         translatable.h
-        dtdfiletype.h
-        propertiesfiletype.h
    )
+
+add_subdirectory(plugins)
 
 add_library(bong SHARED ${bong_SRC})
 target_link_libraries(bong ${GLIB_LIBRARIES} ${GOBJECT_LIBRARIES})

@@ -11,6 +11,7 @@
 
 void file_type_read_file (FileType *self, Translatable *tr, gchar *file_name)
 {
+    /* look up appropriate function from vtable, and call it. */
     FILE_TYPE_GET_CLASS (self)->read_file (self, tr, file_name);
 }
 

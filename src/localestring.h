@@ -28,6 +28,9 @@ struct _LocaleStringClass
     GTypeClass gtypeclass;
 };
 
+/* this class is basically a pair, of a locale and the corresponding
+ * localized string in that locale
+ */
 struct _LocaleString
 {
     GObject parent_instance;
@@ -38,17 +41,30 @@ struct _LocaleString
     gchar *string;
 };
 
+/* some boilerplate code */
 GType locale_string_get_type (void);
 
 void locale_string_class_init (gpointer klass, gpointer klass_data);
 void locale_string_instance_init (GTypeInstance *instance, gpointer klass);
 
 /* public functions */
+
+/* convenience function for creating new LocaleString object */
 LocaleString* locale_string_new (gchar *locale, gchar *string);
+
+/* destructor for LocaleString */
 void locale_string_destroy (gpointer data);
-void locale_string_set_locale (LocaleString *self, gchar *locale);
-void locale_string_set_string (LocaleString *self, gchar *string);
+
+/* returns the locale for the LocaleString */
 gchar* locale_string_get_locale (LocaleString *self);
+
+/* sets the locale for the LocaleString */
+void locale_string_set_locale (LocaleString *self, gchar *locale);
+
+/* returns the localized string for the LocaleString */
 gchar* locale_string_get_string (LocaleString *self);
+
+/* sets the localized string for the LocaleString */
+void locale_string_set_string (LocaleString *self, gchar *string);
 
 #endif /* __LOCALE_STRING_H__ */

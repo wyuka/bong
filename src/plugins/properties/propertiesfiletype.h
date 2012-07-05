@@ -32,6 +32,9 @@ struct _PropertiesFileTypeClass
     FileTypeClass parent_class;
 };
 
+/* this class implements the FileType interface.
+ * This backend is for reading/writing Mozilla properties files.
+ */
 struct _PropertiesFileType
 {
     FileType parent_instance;
@@ -46,9 +49,17 @@ void properties_file_type_instance_init (GTypeInstance *instance, gpointer klass
 /* Public methods */
 
 /* virtual public methods */
+
+/* reimplements file_type_read_file */
 void properties_file_type_read_file (PropertiesFileType *self, Translatable *tr, gchar *file_name);
+
+/* reimplements file_type_read_contents */
 void properties_file_type_read_contents (PropertiesFileType *self, Translatable *tr, gchar *input_contents);
+
+/* reimplements file_type_write_file */
 void properties_file_type_write_file (PropertiesFileType *self, Translatable *tr, gchar *file_name);
+
+/* reimplements file_type_write_contents */
 gchar* properties_file_type_write_contents (PropertiesFileType *self, Translatable *tr, gchar *input_contents);
 
 #endif /* __PROPERTIES_FILE_TYPE_H__ */

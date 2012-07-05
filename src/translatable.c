@@ -13,6 +13,7 @@
 
 void translatable_read_file (Translatable *self, gchar *file_name)
 {
+    /* look up appropriate function from vtable, and call it. */
     self->read_file (self->file_type, self, file_name);
 }
 
@@ -34,9 +35,12 @@ gchar* translatable_write_contents (Translatable *self, gchar *input_contents)
 void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar *uik, gchar *note, gchar *locale, gchar *string)
 {
     LocaleString *locale_string;
+    /* look up the UIK in hash table */
     HashValue *v = g_hash_table_lookup (self->hash_table, uik);
+    /* if it does not exist */
     if (v == NULL)
     {
+        /* add new entry, and set the properties */
         gchar *t_uik = g_strdup(uik);
         v = hash_value_new ();
         hash_value_set_uik (v, t_uik);
@@ -50,10 +54,12 @@ void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar 
             hash_value_add_localestring (v, locale_string);
         }
         g_hash_table_insert (self->hash_table, t_uik, v);
+        /* increment number of entries */
         self->entries_count++;
     }
-    else
+    else /* entry with given UIK already exists */
     {
+        /* update necessary properties */
         if (note != NULL)
             hash_value_set_note(v, note);
         if (entry_number >= 0 && entry_number <= MAX_ENTRY_NUMBER)
@@ -72,11 +78,13 @@ void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar 
 void translatable_set_string_for_uik (Translatable *self, gchar *uik, gchar *locale, gchar *string)
 {
     LocaleString *locale_string;
+    /* look up entry in hash table */
     HashValue *v = g_hash_table_lookup (self->hash_table, uik);
     if (v == NULL)
         return;
     if (locale && string)
     {
+        /* create new localestring, add to entry (will replace older one, if exists) */
         locale_string = locale_string_new (locale, string);
         hash_value_add_localestring (v, locale_string);
     }
@@ -124,9 +132,11 @@ void translatable_set_note_for_entry_index (Translatable *self, EntryIndex entry
 
 void translatable_set_entry_index_for_uik (Translatable *self, gchar *uik, EntryIndex entry_number)
 {
+    /* look up hash table */
     HashValue *v = g_hash_table_lookup (self->hash_table, uik);
     if (v == NULL)
         return;
+    /* set entry index for the entry, and also update in the array for O(1) lookups by entry index */
     hash_value_set_entry_index (v, entry_number);
     if (entry_number >= 0 && entry_number <= MAX_ENTRY_NUMBER)
         self->entry_array[entry_number] = v;
@@ -230,13 +240,22 @@ void translatable_instance_init (GTypeInstance *instance, gpointer klass)
 /* initializes Translatable object by specifying the file type */
 void translatable_init (Translatable *self, FileType *file_type)
 {
+    /* update vtable, according to the file type being used */
     self->read_file = FILE_TYPE_GET_CLASS (file_type)->read_file;
     self->read_contents = FILE_TYPE_GET_CLASS (file_type)->read_contents;
     self->write_file = FILE_TYPE_GET_CLASS (file_type)->write_file;
     self->write_contents = FILE_TYPE_GET_CLASS (file_type)->write_contents;
+
     self->file_type = file_type;
+
+    /* initialize hash table, containing hash values
+     * when it is destroyed, all keys are free'd with g_free, and all hashvalues are free'd
+     * with hash_value_destroy
+     */
     self->hash_table = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, hash_value_destroy);
+    /* initialize entry array which allows O(1) access by entry index */
     self->entry_array = g_malloc0 (sizeof(HashValue*) * MAX_ENTRY_NUMBER + 1);
+    /* initialize entry count */
     self->entries_count = 0;
 }
 
@@ -253,10 +272,13 @@ Translatable* translatable_new (void)
 void translatable_destroy (gpointer data)
 {
     Translatable *self = TRANSLATABLE (data);
+    /* free the hash table */
     g_hash_table_destroy(self->hash_table);
+    /* free the allocated entry array */
     g_free(self->entry_array);
 }
 
+/* boilerplate code */
 GType translatable_get_type (void)
 {
     static GType type = 0;
