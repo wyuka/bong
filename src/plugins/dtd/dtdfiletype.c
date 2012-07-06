@@ -3,14 +3,19 @@
  */
 
 #include "dtdfiletype.h"
-#include "translatable.h"
-#include "utils.h"
+#include <translatable.h>
+#include <utils.h>
 
 #include <stdio.h>
 #include <glib.h>
 #include <string.h>
 
 /* Public methods */
+
+FileType* dtd_file_type_new (void)
+{
+    return FILE_TYPE(g_object_new(TYPE_DTD_FILE_TYPE, NULL));
+}
 
 void dtd_file_type_read_file (DtdFileType *self, Translatable *tr, gchar *file_name)
 {
@@ -43,7 +48,7 @@ void dtd_file_type_write_file (DtdFileType *self, Translatable *tr, gchar *file_
     /* FIXME: for now, just printing the output contents.
      * Should write it to a new file
      */
-    g_printf("%s\n", output_contents);
+    g_printf("%s", output_contents);
 
     /* free allocated strings after usage */
     g_free (input_contents);
@@ -191,6 +196,7 @@ gchar* dtd_file_type_write_contents (DtdFileType *self, Translatable *tr, gchar 
         g_match_info_next (match_info, NULL);
         g_free (key);
     }
+    output_contents = g_strjoin ("", output_contents, input_contents + lastpos, NULL);
     /* free regex variables */
     g_match_info_free(match_info);
     g_regex_unref(string_regex);

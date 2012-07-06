@@ -8,9 +8,14 @@ SET(    bong_SRC
 
 SET(    bong_HEADERS
         translatable.h
+        filetype.h
    )
 
-add_subdirectory(plugins)
+include_directories(
+    ${GOBJECT_INCLUDE_DIR}
+    ${GLIB2_INCLUDE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    )
 
 add_library(bong SHARED ${bong_SRC})
 target_link_libraries(bong ${GLIB_LIBRARIES} ${GOBJECT_LIBRARIES})
@@ -40,5 +45,5 @@ install( FILES
 	 DESTINATION ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/cmake/Bong
 )
 
-
-
+add_subdirectory(plugins)
+add_subdirectory(qt)

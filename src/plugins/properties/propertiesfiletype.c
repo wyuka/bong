@@ -3,13 +3,18 @@
  */
 
 #include "propertiesfiletype.h"
-#include "translatable.h"
-#include "utils.h"
+#include <translatable.h>
+#include <utils.h>
 
 #include <stdio.h>
 #include <string.h>
 
 /* Public methods */
+
+FileType* properties_file_type_new (void)
+{
+    return FILE_TYPE(g_object_new(TYPE_PROPERTIES_FILE_TYPE, NULL));
+}
 
 void properties_file_type_read_file (PropertiesFileType *self, Translatable *tr, gchar *file_name)
 {
@@ -313,7 +318,10 @@ gchar* properties_file_type_write_contents(PropertiesFileType *self, Translatabl
         {
             /* simply append the line to the output */
             tmp = output_contents;
-            output_contents = g_strjoin("", output_contents, line, "\n", NULL);
+            if (to_break == FALSE)
+                output_contents = g_strjoin("", output_contents, line, "\n", NULL);
+            else
+                output_contents = g_strjoin("", output_contents, line, NULL);
             g_free(tmp);
         }
         g_free(stripped_line);

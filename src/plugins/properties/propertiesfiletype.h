@@ -6,7 +6,7 @@
 #ifndef __PROPERTIES_FILE_TYPE_H__
 #define __PROPERTIES_FILE_TYPE_H__
 
-#include "filetype.h"
+#include <filetype.h>
 struct _Translatable;
 typedef struct _Translatable Translatable;
 
@@ -47,6 +47,9 @@ void properties_file_type_class_init (gpointer klass, gpointer klass_data);
 void properties_file_type_instance_init (GTypeInstance *instance, gpointer klass);
 
 /* Public methods */
+
+/* convenience function to create new object of this file type */
+FileType* properties_file_type_new (void);
 
 /* virtual public methods */
 

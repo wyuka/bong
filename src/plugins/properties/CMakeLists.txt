@@ -1,5 +1,3 @@
-find_package(Bong REQUIRED)
-
 SET(    bong_properties_SRC
         propertiesfiletype.c
     )
@@ -8,8 +6,17 @@ SET(    bong_properties_HEADERS
         propertiesfiletype.h
    )
 
+include_directories(
+    ${GOBJECT_INCLUDE_DIR}
+    ${GLIB2_INCLUDE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_SOURCE_DIR}/src
+    )
+
+link_directories (${CMAKE_BINARY_DIR}/src)
+
 add_library(bong-properties SHARED ${bong_properties_SRC})
-target_link_libraries(bong-properties ${GLIB_LIBRARIES} ${GOBJECT_LIBRARIES} ${BONG_LIBRARIES})
+target_link_libraries(bong-properties ${GLIB_LIBRARIES} ${GOBJECT_LIBRARIES} bong)
 
 set_target_properties(bong-properties PROPERTIES VERSION "0.0.0" SOVERSION "0" LINK_INTERFACE_LIBRARIES "" DEFINE_SYMBOL BUILDING_BONG)
 
@@ -35,3 +42,5 @@ install( FILES
          ${CMAKE_CURRENT_BINARY_DIR}/BongPropertiesConfig.cmake
      DESTINATION ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/cmake/BongProperties
 )
+
+add_subdirectory(qt)

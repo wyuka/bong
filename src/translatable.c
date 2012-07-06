@@ -276,6 +276,10 @@ void translatable_destroy (gpointer data)
     g_hash_table_destroy(self->hash_table);
     /* free the allocated entry array */
     g_free(self->entry_array);
+    /* free the FileType object */
+    g_object_unref(self->file_type);
+    /* free self */
+    g_object_unref(self);
 }
 
 /* boilerplate code */

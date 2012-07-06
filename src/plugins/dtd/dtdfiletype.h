@@ -48,6 +48,9 @@ void dtd_file_type_instance_init (GTypeInstance *instance, gpointer klass);
 
 /* Public methods */
 
+/* convenience function to create new object of this file type */
+FileType* dtd_file_type_new (void);
+
 /* reimplemented public methods */
 
 /* reimplements file_type_read_file */
