@@ -7,5 +7,4 @@ PropertiesFileTypeQt::PropertiesFileTypeQt()
 
 PropertiesFileTypeQt::~PropertiesFileTypeQt()
 {
-    //g_object_unref(m_fileType);
 }

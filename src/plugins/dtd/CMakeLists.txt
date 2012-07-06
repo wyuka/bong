@@ -42,3 +42,5 @@ install( FILES
          ${CMAKE_CURRENT_BINARY_DIR}/BongDtdConfig.cmake
      DESTINATION ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/cmake/BongDtd
 )
+
+add_subdirectory(qt)
