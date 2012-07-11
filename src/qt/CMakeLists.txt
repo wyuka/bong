@@ -8,7 +8,7 @@ SET(    bongqt_SRC
 SET(    bongqt_HEADERS
         translatableqt.hpp
         filetypeqt.hpp
-        bonqt_export.hpp
+        bongqt_export.hpp
         globalsqt.hpp
    )
 
