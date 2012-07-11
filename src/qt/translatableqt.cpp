@@ -2,12 +2,15 @@
 
 #include "translatableqt.hpp"
 #include "filetypeqt.hpp"
-
 #include "globalsqt.hpp"
+
+extern "C"
+{
+    #include <translatable.h>
+}
 
 TranslatableQt::TranslatableQt(FileTypeQt *fileType)
 {
-    initBongQt();
     m_fileType = fileType;
     m_translatable = translatable_new();
     translatable_init (m_translatable, fileType->getPointer());
@@ -16,6 +19,11 @@ TranslatableQt::TranslatableQt(FileTypeQt *fileType)
 TranslatableQt::~TranslatableQt()
 {
     translatable_destroy (m_translatable);
+}
+
+void TranslatableQt::init()
+{
+    g_type_init();
 }
 
 void TranslatableQt::readFile(QString fileName)

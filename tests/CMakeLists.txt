@@ -7,7 +7,7 @@ include_directories(
     ${GLIB2_INCLUDE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src
-    )
+)
 
 if(BUILD_PROPERTIES_TESTS)
 

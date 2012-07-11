@@ -5,11 +5,6 @@
 
 #include <filetypeqt.hpp>
 
-extern "C"
-{
-    #include <propertiesfiletype.h>
-}
-
 class BONGQT_PROPERTIES_EXPORT PropertiesFileTypeQt : public FileTypeQt
 {
 public:

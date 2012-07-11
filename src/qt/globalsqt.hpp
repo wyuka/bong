@@ -3,14 +3,13 @@
 
 #include "bongqt_export.hpp"
 
+#include <QtCore/QtCore>
+
 extern "C"
 {
     #include <glib-object.h>
 }
-#include <QtCore/QtCore>
-
 
 BONGQT_EXPORT gchar* qstringToGchar(QString &text);
-BONGQT_EXPORT void initBongQt();
 
 #endif // __GLOBALS_QT_H__

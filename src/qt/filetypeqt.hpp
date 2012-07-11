@@ -3,10 +3,7 @@
 
 #include "bongqt_export.hpp"
 
-extern "C"
-{
-    #include <filetype.h>
-}
+struct _FileType;
 
 class BONGQT_EXPORT FileTypeQt
 {
@@ -15,13 +12,14 @@ public:
     {
         m_fileType = 0;
     }
-    FileType* getPointer()
+
+    _FileType* getPointer()
     {
         return m_fileType;
     }
 
 protected:
-    FileType* m_fileType;
+    _FileType* m_fileType;
 };
 
 #endif // __FILETYPE_QT_H__

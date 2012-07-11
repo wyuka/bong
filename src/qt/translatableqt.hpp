@@ -4,14 +4,11 @@
 
 #include "bongqt_export.hpp"
 
-extern "C"
-{
-    #include <translatable.h>
-}
 #include <QtCore/QtCore>
 
 class FileTypeQt;
 
+struct _Translatable;
 typedef int EntryIndex;
 
 class BONGQT_EXPORT TranslatableQt
@@ -19,6 +16,8 @@ class BONGQT_EXPORT TranslatableQt
 public:
     TranslatableQt(FileTypeQt *fileType);
     ~TranslatableQt();
+
+    static void init();
 
     void readFile(QString fileName);
     void writeFile(QString fileName);
@@ -47,9 +46,9 @@ public:
     int entryCount();
 
 private:
-    Translatable* getPointer() { return m_translatable; }
+    _Translatable* getPointer() { return m_translatable; }
 
-    Translatable *m_translatable;
+    _Translatable *m_translatable;
     FileTypeQt *m_fileType;
 };
 

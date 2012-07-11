@@ -5,11 +5,6 @@
 
 #include <filetypeqt.hpp>
 
-extern "C"
-{
-    #include <dtdfiletype.h>
-}
-
 class BONGQT_DTD_EXPORT DtdFileTypeQt : public FileTypeQt
 {
 public:

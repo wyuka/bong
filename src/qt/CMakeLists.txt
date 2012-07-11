@@ -9,7 +9,6 @@ SET(    bongqt_HEADERS
         translatableqt.hpp
         filetypeqt.hpp
         bongqt_export.hpp
-        globalsqt.hpp
    )
 
 include_directories(

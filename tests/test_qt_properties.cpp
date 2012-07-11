@@ -4,17 +4,10 @@
 
 #include <translatableqt.hpp>
 #include <propertiesfiletypeqt.hpp>
-#include <globalsqt.hpp>
-
-extern "C"
-{
-    #include <glib-object.h>
-}
 
 int main(int argc, char* argv[])
 {
-    //initBongQt();
-    g_type_init();
+    TranslatableQt::init();
 
     FileTypeQt *ty = new PropertiesFileTypeQt();
     TranslatableQt tr(ty);
