@@ -1,11 +1,15 @@
+find_package(Qt4 REQUIRED)
+
 SET(    bongqt_SRC
         translatableqt.cpp
+        globalsqt.cpp
     )
 
 SET(    bongqt_HEADERS
         translatableqt.hpp
         filetypeqt.hpp
         bonqt_export.hpp
+        globalsqt.hpp
    )
 
 include_directories(
@@ -19,7 +23,7 @@ include_directories(
 link_directories (${CMAKE_BINARY_DIR}/src)
 
 add_library(bongqt SHARED ${bongqt_SRC})
-target_link_libraries(bongqt ${GLIB_LIBRARIES} ${GOBJECT_LIBRARIES} ${QT_QTCORE_LIBRARY} bong)
+target_link_libraries(bongqt ${GOBJECT_LIBRARIES} ${GLIB2_LIBRARIES} ${QT_QTCORE_LIBRARY} bong)
 
 set_target_properties(bongqt PROPERTIES VERSION "0.0.0" SOVERSION "0" LINK_INTERFACE_LIBRARIES "" DEFINE_SYMBOL BUILDING_BONGQT)
 

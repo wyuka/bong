@@ -18,7 +18,7 @@ include_directories(
     )
 
 add_library(bong SHARED ${bong_SRC})
-target_link_libraries(bong ${GLIB_LIBRARIES} ${GOBJECT_LIBRARIES})
+target_link_libraries(bong ${GOBJECT_LIBRARIES} ${GLIB2_LIBRARIES})
 
 set_target_properties(bong PROPERTIES VERSION "0.0.0" SOVERSION "0" LINK_INTERFACE_LIBRARIES "" DEFINE_SYMBOL BUILDING_BONG)
 

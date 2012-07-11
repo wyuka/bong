@@ -1,3 +1,5 @@
+find_package(Qt4 REQUIRED)
+
 SET(    bongqt_dtd_SRC
         dtdfiletypeqt.cpp
     )
@@ -19,7 +21,7 @@ include_directories(
 link_directories (${CMAKE_BINARY_DIR}/src)
 
 add_library(bongqt-dtd SHARED ${bongqt_dtd_SRC})
-target_link_libraries(bongqt-dtd ${GLIB_LIBRARIES} ${GOBJECT_LIBRARIES} ${QT_QTCORE_LIBRARY} bong bong-dtd)
+target_link_libraries(bongqt-dtd ${GOBJECT_LIBRARIES} ${GLIB2_LIBRARIES} ${QT_QTCORE_LIBRARY} bong bongqt bong-dtd)
 
 set_target_properties(bongqt-dtd PROPERTIES VERSION "0.0.0" SOVERSION "0" LINK_INTERFACE_LIBRARIES "" DEFINE_SYMBOL BUILDING_BONGQT_DTD)
 

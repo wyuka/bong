@@ -1,6 +1,12 @@
+#ifndef __FILETYPE_QT_H__
+#define __FILETYPE_QT_H__
+
 #include "bongqt_export.hpp"
 
-#include <filetype.h>
+extern "C"
+{
+    #include <filetype.h>
+}
 
 class BONGQT_EXPORT FileTypeQt
 {
@@ -17,3 +23,5 @@ public:
 protected:
     FileType* m_fileType;
 };
+
+#endif // __FILETYPE_QT_H__

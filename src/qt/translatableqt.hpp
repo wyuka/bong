@@ -1,18 +1,16 @@
+
+#ifndef __TRANSLATABLE_QT_H__
+#define __TRANSLATABLE_QT_H__
+
 #include "bongqt_export.hpp"
 
-#include <translatable.h>
+extern "C"
+{
+    #include <translatable.h>
+}
 #include <QtCore/QtCore>
 
 class FileTypeQt;
-
-static gchar* qstringToGchar(QString &text)
-{
-    gchar *output = NULL;
-    if (text.isEmpty())
-        return NULL;
-    QByteArray arr = text.toUtf8();
-    output = g_strdup(arr.constData());
-}
 
 typedef int EntryIndex;
 
@@ -54,3 +52,5 @@ private:
     Translatable *m_translatable;
     FileTypeQt *m_fileType;
 };
+
+#endif // __TRANSLATABLE_QT_H__

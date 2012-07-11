@@ -16,7 +16,7 @@ include_directories(
 link_directories (${CMAKE_BINARY_DIR}/src)
 
 add_library(bong-properties SHARED ${bong_properties_SRC})
-target_link_libraries(bong-properties ${GLIB_LIBRARIES} ${GOBJECT_LIBRARIES} bong)
+target_link_libraries(bong-properties ${GOBJECT_LIBRARIES} ${GLIB2_LIBRARIES} bong)
 
 set_target_properties(bong-properties PROPERTIES VERSION "0.0.0" SOVERSION "0" LINK_INTERFACE_LIBRARIES "" DEFINE_SYMBOL BUILDING_BONG)
 

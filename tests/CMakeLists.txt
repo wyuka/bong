@@ -1,7 +1,7 @@
 option(BUILD_DTD_TESTS "Build tests for Mozilla DTD backend" on)
 option(BUILD_PROPERTIES_TESTS "Build tests for Mozilla Properties backend" on)
+option(BUILD_QT_PROPERTIES_TESTS "Build tests for Qt wrapper for the Mozilla Properties backend" on)
 
-message("baal")
 include_directories(
     ${GOBJECT_INCLUDE_DIR}
     ${GLIB2_INCLUDE_DIR}
@@ -34,3 +34,14 @@ if(BUILD_DTD_TESTS)
     target_link_libraries(test_dtd ${GOBJECT_LIBRARIES} ${GLIB2_LIBRARIES} bong bong-dtd)
 
 endif(BUILD_DTD_TESTS)
+
+if(BUILD_QT_PROPERTIES_TESTS)
+
+    find_package(Qt4 REQUIRED)
+
+    include_directories(${CMAKE_SOURCE_DIR}/src/plugins/properties/qt ${CMAKE_SOURCE_DIR}/src/qt)
+    set(test_qt_properties_SRCS test_qt_properties.cpp)
+    add_executable(test_qt_properties ${test_qt_properties_SRCS})
+    target_link_libraries(test_qt_properties ${GOBJECT_LIBRARIES} ${GLIB2_LIBRARIES} ${QT_QTCORE_LIBRARY} bong bongqt bong-properties bongqt-properties)
+
+endif(BUILD_QT_PROPERTIES_TESTS)

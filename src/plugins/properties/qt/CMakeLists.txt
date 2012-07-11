@@ -1,3 +1,5 @@
+find_package(Qt4 REQUIRED)
+
 SET(    bongqt_properties_SRC
         propertiesfiletypeqt.cpp
     )
@@ -19,7 +21,7 @@ include_directories(
 link_directories (${CMAKE_BINARY_DIR}/src)
 
 add_library(bongqt-properties SHARED ${bongqt_properties_SRC})
-target_link_libraries(bongqt-properties ${GLIB_LIBRARIES} ${GOBJECT_LIBRARIES} ${QT_QTCORE_LIBRARY} bong bong-properties)
+target_link_libraries(bongqt-properties ${GOBJECT_LIBRARIES} ${GLIB2_LIBRARIES} ${QT_QTCORE_LIBRARY} bong bongqt bong-properties)
 
 set_target_properties(bongqt-properties PROPERTIES VERSION "0.0.0" SOVERSION "0" LINK_INTERFACE_LIBRARIES "" DEFINE_SYMBOL BUILDING_BONGQT_PROPERTIES)
 

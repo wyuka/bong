@@ -3,8 +3,11 @@
 #include "translatableqt.hpp"
 #include "filetypeqt.hpp"
 
+#include "globalsqt.hpp"
+
 TranslatableQt::TranslatableQt(FileTypeQt *fileType)
 {
+    initBongQt();
     m_fileType = fileType;
     m_translatable = translatable_new();
     translatable_init (m_translatable, fileType->getPointer());
