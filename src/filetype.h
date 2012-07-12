@@ -38,6 +38,8 @@ struct _FileTypeClass
     void (*write_file) (FileType *self, struct _Translatable *tr, gchar *fileName);
     void (*read_contents) (FileType *self, struct _Translatable *tr, gchar *input_contents);
     gchar* (*write_contents) (FileType *self, struct _Translatable *tr, gchar *input_contents);
+
+    void (*destroy) (FileType *self);
 };
 
 struct _FileType
@@ -70,5 +72,8 @@ void file_type_write_file (FileType *self, struct _Translatable *tr, gchar *file
  * The output must be manually free'd.
  */
 gchar* file_type_write_contents (FileType *self, struct _Translatable *tr, gchar *input_contents);
+
+/* destroy the file type object, free the space allocated to it */
+void file_type_destroy (FileType *self);
 
 #endif /* __FILE_TYPE_H__ */

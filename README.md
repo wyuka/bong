@@ -6,6 +6,16 @@ Description
 
 A library that allows reading and editing of non-po translation files.
 
+Build Requirements
+------------------
+
+You need to have the following packages installed (for Fedora)
+
+cmake
+automake
+glib2-devel
+qt-devel
+
 Build instructions
 ------------------
 

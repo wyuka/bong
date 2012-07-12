@@ -83,6 +83,7 @@ void hash_value_destroy (gpointer data)
     g_free (self->uik);
     g_free (self->note);
     g_list_free_full (self->list, locale_string_destroy);
+    g_object_unref(self);
 }
 
 /* This is called when the class is initialized */

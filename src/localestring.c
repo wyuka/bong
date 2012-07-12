@@ -24,6 +24,7 @@ void locale_string_destroy (gpointer data)
     LocaleString *self = LOCALE_STRING (data);
     g_free(self->locale);
     g_free(self->string);
+    g_object_unref(self);
 }
 
 LocaleString* locale_string_new (gchar *locale, gchar *string)

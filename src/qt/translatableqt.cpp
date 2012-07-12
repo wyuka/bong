@@ -84,7 +84,6 @@ QString TranslatableQt::getNoteForUik(QString uik)
 
     _output = translatable_get_note_for_uik (m_translatable, _uik);
     QString toReturn = QString::fromUtf8(_output);
-    g_free(_output);
     return toReturn;
 }
 
@@ -105,7 +104,6 @@ QString TranslatableQt::getNoteForEntryIndex(EntryIndex entryNumber)
     gchar *_output;
     _output = translatable_get_note_for_entry_index(m_translatable, entryNumber);
     QString toReturn = QString::fromUtf8(_output);
-    g_free(_output);
     return toReturn;
 }
 
@@ -124,7 +122,6 @@ QString TranslatableQt::getUikForEntryIndex(EntryIndex entryNumber)
     gchar *_output;
     _output = translatable_get_uik_for_entry_index (m_translatable, entryNumber);
     QString toReturn = QString::fromUtf8(_output);
-    g_free(_output);
     return toReturn;
 }
 
@@ -157,9 +154,9 @@ QString TranslatableQt::getStringForUik(QString uik, QString locale)
     _locale = qstringToGchar(locale);
 
     _output = translatable_get_string_for_uik (m_translatable, _uik, _locale);
+    g_print("%s\n", _output);
 
     QString toReturn = QString::fromUtf8(_output);
-    g_free(_output);
     g_free(_uik);
     g_free(_locale);
     return toReturn;
@@ -187,7 +184,6 @@ QString TranslatableQt::getStringForEntryIndex(EntryIndex entryNumber, QString l
     _output = translatable_get_string_for_entry_index (m_translatable, entryNumber, _locale);
 
     QString toReturn = QString::fromUtf8(_output);
-    g_free(_output);
     g_free(_locale);
     return toReturn;
 }

@@ -7,6 +7,8 @@
 
 #include <stdio.h>
 
+void file_type_destroy_impl (FileType *self);
+
 /* Public methods */
 
 void file_type_read_file (FileType *self, Translatable *tr, gchar *file_name)
@@ -30,6 +32,11 @@ gchar* file_type_write_contents (FileType *self, Translatable *tr, gchar *input_
     return (FILE_TYPE_GET_CLASS (self)->write_contents (self, tr, input_contents));
 }
 
+void file_type_destroy (FileType *self)
+{
+    FILE_TYPE_GET_CLASS (self)->destroy (self);
+}
+
 /* This is called when the class is initialized */
 void file_type_class_init (gpointer klass, gpointer klass_data)
 {
@@ -40,6 +47,14 @@ void file_type_class_init (gpointer klass, gpointer klass_data)
     this_class->read_contents = 0;
     this_class->write_file = 0;
     this_class->write_contents = 0;
+
+    this_class->destroy = file_type_destroy_impl;
+}
+
+/* virtual method implementation */
+void file_type_destroy_impl (FileType *self)
+{
+    g_object_unref(self);
 }
 
 /* this is the constructor */

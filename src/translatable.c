@@ -277,7 +277,7 @@ void translatable_destroy (gpointer data)
     /* free the allocated entry array */
     g_free(self->entry_array);
     /* free the FileType object */
-    g_object_unref(self->file_type);
+    file_type_destroy(self->file_type);
     /* free self */
     g_object_unref(self);
 }
