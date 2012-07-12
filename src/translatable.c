@@ -50,8 +50,7 @@ void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar 
             self->entry_array[entry_number] = v;
         if (locale && string)
         {
-            locale_string = locale_string_new (locale, string);
-            hash_value_add_localestring (v, locale_string);
+            hash_value_add_localestring (v, locale, string);
         }
         g_hash_table_insert (self->hash_table, t_uik, v);
         /* increment number of entries */
@@ -60,17 +59,16 @@ void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar 
     else /* entry with given UIK already exists */
     {
         /* update necessary properties */
-        if (note != NULL)
+        if (note != NULL && hash_value_get_note (v))
             hash_value_set_note(v, note);
-        if (entry_number >= 0 && entry_number <= MAX_ENTRY_NUMBER)
+        if (entry_number >= 0 && entry_number <= MAX_ENTRY_NUMBER && hash_value_get_entry_index(v) == -1)
         {
             hash_value_set_entry_index (v, entry_number);
             self->entry_array[entry_number] = v;
         }
         if (locale && string)
         {
-            locale_string = locale_string_new (locale, string);
-            hash_value_add_localestring (v, locale_string);
+            hash_value_add_localestring (v, locale, string);
         }
     }
 }
@@ -85,8 +83,7 @@ void translatable_set_string_for_uik (Translatable *self, gchar *uik, gchar *loc
     if (locale && string)
     {
         /* create new localestring, add to entry (will replace older one, if exists) */
-        locale_string = locale_string_new (locale, string);
-        hash_value_add_localestring (v, locale_string);
+        hash_value_add_localestring (v, locale, string);
     }
 }
 
@@ -104,8 +101,7 @@ void translatable_set_string_for_entry_index (Translatable *self, EntryIndex ent
     }
     if (locale && string)
     {
-        locale_string = locale_string_new (locale, string);
-        hash_value_add_localestring (v, locale_string);
+        hash_value_add_localestring (v, locale, string);
     }
 }
 

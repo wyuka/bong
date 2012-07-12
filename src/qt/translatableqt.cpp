@@ -154,7 +154,6 @@ QString TranslatableQt::getStringForUik(QString uik, QString locale)
     _locale = qstringToGchar(locale);
 
     _output = translatable_get_string_for_uik (m_translatable, _uik, _locale);
-    g_print("%s\n", _output);
 
     QString toReturn = QString::fromUtf8(_output);
     g_free(_uik);

@@ -102,7 +102,8 @@ GType properties_file_type_get_type (void)
 
 void properties_file_type_read_contents (PropertiesFileType *self, Translatable *tr, gchar *input_contents)
 {
-    gchar *equalpos, *key, *value, *stripped_line, *note = NULL;
+    gchar *equalpos, *key, *value, *stripped_line;
+    GString *note_string = NULL;
     GList *key_list = NULL, *key_list_for_note = NULL, *note_list_for_keys = NULL, *note_list = NULL;
     gchar *end, *line = input_contents;
     gboolean note_on = FALSE, to_break = FALSE;
@@ -139,9 +140,9 @@ void properties_file_type_read_contents (PropertiesFileType *self, Translatable 
                 {
                     /* append the previous note to the global note list */
                     GList *notekey = key_list_for_note;
-                    if (notekey != NULL && note != NULL)
+                    if (notekey != NULL && note_string != NULL)
                     {
-                        note_list = g_list_prepend(note_list, note);
+                        note_list = g_list_prepend(note_list, note_string->str);
                     }
                     /* for every UIK for the note, add a copy of the note once
                      * to the list called note_list_for_keys, and a copy of the key
@@ -149,14 +150,16 @@ void properties_file_type_read_contents (PropertiesFileType *self, Translatable 
                      */
                     while (notekey != NULL)
                     {
-                        note_list_for_keys = g_list_prepend(note_list_for_keys, note);
+                        note_list_for_keys = g_list_prepend(note_list_for_keys, note_string->str);
                         key_list = g_list_prepend(key_list, notekey->data);
                         notekey = notekey->next;
                     }
                 }
 
                 /* clear all variables, need to store new note */
-                note = NULL;
+                if (note_string)
+                    g_string_free(note_string, FALSE);
+                note_string = NULL;
                 if (key_list_for_note)
                     g_list_free(key_list_for_note);
                 key_list_for_note = NULL;
@@ -178,8 +181,9 @@ void properties_file_type_read_contents (PropertiesFileType *self, Translatable 
                     if (notestart && notestart[1] != '\0')
                     {
                         /* store the note and strip it of leading and trailing whitespaces */
-                        note = g_strdup(notestart+1);
-                        g_strstrip(note);
+                        gchar *temp = g_strstrip(g_strdup(notestart+1));
+                        note_string = g_string_new(temp);
+                        g_free(temp);
                     }
                 }
             }
@@ -188,18 +192,17 @@ void properties_file_type_read_contents (PropertiesFileType *self, Translatable 
             {
                 gchar *noteline = g_strstrip(g_strdup(stripped_line+1));
                 /* if note was not empty previously */
-                if (note)
+                if (note_string)
                 {
                     /* add the current line to the note */
-                    gchar *tmp = note;
-                    note = g_strjoin("\n", note, noteline, NULL);
-                    g_free(tmp);
-                    g_free(noteline);
+                    g_string_append_printf(note_string, "\n%s", noteline);
+                    g_free (noteline);
                 }
                 else
                 {
                     /* copy this line as the note */
-                    note = noteline;
+                    note_string = g_string_new(noteline);
+                    g_free(noteline);
                 }
             }
         }
@@ -211,9 +214,9 @@ void properties_file_type_read_contents (PropertiesFileType *self, Translatable 
             {
                 /* append the just finished note to the global note list */
                 GList *notekey = key_list_for_note;
-                if (notekey != NULL && note != NULL)
+                if (notekey != NULL && note_string != NULL)
                 {
-                    note_list = g_list_prepend(note_list, note);
+                    note_list = g_list_prepend(note_list, note_string->str);
                 }
                 /* for every UIK for the note, add a copy of the note once
                  * to the list called note_list_for_keys, and a copy of the key
@@ -221,7 +224,7 @@ void properties_file_type_read_contents (PropertiesFileType *self, Translatable 
                  */
                 while (notekey != NULL)
                 {
-                    note_list_for_keys = g_list_prepend(note_list_for_keys, note);
+                    note_list_for_keys = g_list_prepend(note_list_for_keys, note_string->str);
                     key_list = g_list_prepend(key_list, notekey->data);
                     notekey = notekey->next;
                 }
@@ -276,7 +279,8 @@ void properties_file_type_read_contents (PropertiesFileType *self, Translatable 
 
 gchar* properties_file_type_write_contents(PropertiesFileType *self, Translatable *tr, gchar *input_contents)
 {
-    gchar *equalpos, *key, *value, *stripped_line, *output_contents = g_strdup(""), *tmp;
+    gchar *equalpos, *key, *value, *stripped_line;
+    GString *output_contents = g_string_new(NULL);
     gchar *end, *line = input_contents;
     gboolean to_break = FALSE;
 
@@ -307,22 +311,18 @@ gchar* properties_file_type_write_contents(PropertiesFileType *self, Translatabl
             key = g_strstrip(g_strndup(stripped_line, equalpos - stripped_line));
             /* retrieve value of localized string for UIK from Translatable object */
             value = translatable_get_string_for_uik(tr, key, "en");
-            tmp = output_contents;
             /* append the key-value pair to the output */
-            output_contents = g_strjoin("", output_contents, key, "=", value, "\n", NULL);
-            g_free(tmp);
+            g_string_append_printf(output_contents, "%s=%s\n", key, value);
             g_free(key);
         }
         /* if the line does not have a UIK and localization string */
         else
         {
             /* simply append the line to the output */
-            tmp = output_contents;
             if (to_break == FALSE)
-                output_contents = g_strjoin("", output_contents, line, "\n", NULL);
+                g_string_append_printf(output_contents, "%s\n", line);
             else
-                output_contents = g_strjoin("", output_contents, line, NULL);
-            g_free(tmp);
+                g_string_append(output_contents, line);
         }
         g_free(stripped_line);
 
@@ -335,5 +335,8 @@ gchar* properties_file_type_write_contents(PropertiesFileType *self, Translatabl
         /* change the current position to just after newline */
         line = end + 1;
     }
-    return output_contents;
+    if (output_contents)
+        return g_string_free(output_contents, FALSE);
+    else
+        return NULL;
 }

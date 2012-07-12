@@ -62,7 +62,7 @@ void hash_value_destroy (gpointer data);
 /* add the LocaleString to the hashvalue, will replace any existing entry
  * with same locale
  */
-void hash_value_add_localestring (HashValue *self, LocaleString *string);
+void hash_value_add_localestring (HashValue *self, gchar *locale, gchar *string);
 
 /* returns a LocaleString for a specified locale */
 LocaleString* hash_value_find_localestring (HashValue *self, gchar *locale);

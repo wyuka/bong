@@ -7,22 +7,22 @@
 
 /* Public methods */
 
-void hash_value_add_localestring (HashValue *self, LocaleString *string)
+void hash_value_add_localestring (HashValue *self, gchar *locale, gchar *string)
 {
-    GList *current = self->list;
-    gchar *locale = locale_string_get_locale(string);
     /* check if LocaleString with same locale exists */
     LocaleString *exists = hash_value_find_localestring (self, locale);
     /* if it exists, */
     if (exists != NULL)
     {
         /* free and remove the LocaleString from the list */
-        locale_string_destroy(current->data);
-        self->list = g_list_remove_link(self->list, current);
+        locale_string_set_string (exists, string);
     }
-
-    /* add the LocaleString to the list of LocaleStrings */
-    self->list = g_list_prepend (self->list, string);
+    else
+    {
+        /* add the LocaleString to the list of LocaleStrings */
+        LocaleString *localestring = locale_string_new (locale, string);
+        self->list = g_list_prepend (self->list, localestring);
+    }
 }
 
 LocaleString* hash_value_find_localestring (HashValue *self, gchar *locale)

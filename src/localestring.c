@@ -3,6 +3,8 @@
  */
 
 #include "localestring.h"
+#include "string.h"
+#include "math.h"
 
 /* Public methods */
 
@@ -33,6 +35,7 @@ LocaleString* locale_string_new (gchar *locale, gchar *string)
      * locale and string
      */
     LocaleString* ls = g_object_new(TYPE_LOCALE_STRING, NULL);
+    ls->string_length = 0;
     locale_string_set_locale (ls, locale);
     locale_string_set_string (ls, string);
     return ls;
@@ -46,8 +49,14 @@ void locale_string_set_locale (LocaleString *self, gchar *locale)
 
 void locale_string_set_string (LocaleString *self, gchar *string)
 {
-    g_free(self->string);
-    self->string = g_strdup(string);
+    int len = strlen(string);
+    if (len >= self->string_length)
+    {
+        g_free(self->string);
+        self->string_length = 100 * (1 + (len / 100));
+        self->string = g_new(gchar, self->string_length);
+    }
+    strcpy(self->string, string);
 }
 
 gchar* locale_string_get_locale (LocaleString *self)

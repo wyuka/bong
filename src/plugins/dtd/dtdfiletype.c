@@ -164,7 +164,7 @@ gchar* dtd_file_type_write_contents (DtdFileType *self, Translatable *tr, gchar 
     GMatchInfo *match_info;
     GRegex *string_regex = NULL;
     int lastpos = 0;
-    gchar *output_contents = g_strdup(""), *line, *tmp;
+    GString *output_contents = g_string_new (NULL);
 
     /* create new regex to search for localized strings */
     string_regex = g_regex_new("<!ENTITY\\s+?(.*)\\s*?\"(.*)\">", G_REGEX_UNGREEDY|G_REGEX_DOTALL, 0, &error);
@@ -178,9 +178,7 @@ gchar* dtd_file_type_write_contents (DtdFileType *self, Translatable *tr, gchar 
         int startpos, endpos;
         g_match_info_fetch_pos (match_info, 0, &startpos, &endpos);
         input_contents[startpos] = '\0';
-        tmp = output_contents;
-        output_contents = g_strjoin ("", output_contents, input_contents + lastpos, NULL);
-        g_free (tmp);
+        g_string_append (output_contents, input_contents + lastpos);
         input_contents[startpos] = '<';
         lastpos = endpos;
 
@@ -188,11 +186,7 @@ gchar* dtd_file_type_write_contents (DtdFileType *self, Translatable *tr, gchar 
         gchar *key = g_match_info_fetch(match_info, 1);
         gchar *value = translatable_get_string_for_uik(tr, key, "en");
         /* store this modified value in the output */
-        line = g_strdup_printf("<!ENTITY %s \"%s\">", key, value);
-        tmp = output_contents;
-        output_contents = g_strjoin ("", output_contents, line, NULL);
-        g_free (tmp);
-        g_free (line);
+        g_string_append_printf (output_contents, "<!ENTITY %s \"%s\">", key, value);
         g_match_info_next (match_info, NULL);
         g_free (key);
     }
@@ -201,5 +195,8 @@ gchar* dtd_file_type_write_contents (DtdFileType *self, Translatable *tr, gchar 
     g_match_info_free(match_info);
     g_regex_unref(string_regex);
 
-    return output_contents;
+    if (output_contents)
+        return g_string_free (output_contents, FALSE);
+    else
+        return NULL;
 }

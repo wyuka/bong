@@ -39,6 +39,7 @@ struct _LocaleString
     /* private */
     gchar *locale;
     gchar *string;
+    int string_length;
 };
 
 /* some boilerplate code */
