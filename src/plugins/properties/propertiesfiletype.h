@@ -54,15 +54,15 @@ FileType* properties_file_type_new (void);
 /* virtual public methods */
 
 /* reimplements file_type_read_file */
-void properties_file_type_read_file (PropertiesFileType *self, Translatable *tr, gchar *file_name);
+void properties_file_type_read_file (PropertiesFileType *self, Translatable *tr, gchar *file_name, gchar *locale);
 
 /* reimplements file_type_read_contents */
-void properties_file_type_read_contents (PropertiesFileType *self, Translatable *tr, gchar *input_contents);
+void properties_file_type_read_contents (PropertiesFileType *self, Translatable *tr, gchar *input_contents, gchar *locale);
 
 /* reimplements file_type_write_file */
-void properties_file_type_write_file (PropertiesFileType *self, Translatable *tr, gchar *file_name);
+void properties_file_type_write_file (PropertiesFileType *self, Translatable *tr, gchar *file_name, gchar *locale);
 
 /* reimplements file_type_write_contents */
-gchar* properties_file_type_write_contents (PropertiesFileType *self, Translatable *tr, gchar *input_contents);
+gchar* properties_file_type_write_contents (PropertiesFileType *self, Translatable *tr, gchar *input_contents, gchar *locale);
 
 #endif /* __PROPERTIES_FILE_TYPE_H__ */

@@ -16,7 +16,7 @@ FileType* properties_file_type_new (void)
     return FILE_TYPE(g_object_new(TYPE_PROPERTIES_FILE_TYPE, NULL));
 }
 
-void properties_file_type_read_file (PropertiesFileType *self, Translatable *tr, gchar *file_name)
+void properties_file_type_read_file (PropertiesFileType *self, Translatable *tr, gchar *file_name, gchar *locale)
 {
     gchar *input_contents = NULL;
     GError *read_error = NULL;
@@ -24,12 +24,12 @@ void properties_file_type_read_file (PropertiesFileType *self, Translatable *tr,
     /* read file contents into an allocated string */
     g_file_get_contents(file_name, &input_contents, &length, &read_error);
     /* parse the contents */
-    properties_file_type_read_contents (self, tr, input_contents);
+    properties_file_type_read_contents (self, tr, input_contents, locale);
     /* free the string containing the file contents */
     g_free (input_contents);
 }
 
-void properties_file_type_write_file (PropertiesFileType *self, Translatable *tr, gchar *file_name)
+void properties_file_type_write_file (PropertiesFileType *self, Translatable *tr, gchar *file_name, gchar *locale)
 {
     gchar *input_contents = NULL;
     gchar *output_contents = NULL;
@@ -42,7 +42,7 @@ void properties_file_type_write_file (PropertiesFileType *self, Translatable *tr
      * This string is created by modifying the input contents according
      * to entries in the Translatable object
      */
-    output_contents = properties_file_type_write_contents (self, tr, input_contents);
+    output_contents = properties_file_type_write_contents (self, tr, input_contents, locale);
 
     /* FIXME: for now, just printing the output contents.
      * Should write it to a new file
@@ -100,7 +100,7 @@ GType properties_file_type_get_type (void)
 
 /* Private methods */
 
-void properties_file_type_read_contents (PropertiesFileType *self, Translatable *tr, gchar *input_contents)
+void properties_file_type_read_contents (PropertiesFileType *self, Translatable *tr, gchar *input_contents, gchar *locale)
 {
     gchar *equalpos, *key, *value, *stripped_line;
     GString *note_string = NULL;
@@ -241,7 +241,7 @@ void properties_file_type_read_contents (PropertiesFileType *self, Translatable 
                 /* add the localization string to the Translatable object for
                  * the retrieved UIK
                  */
-                translatable_add_entry (tr, entry_number, key, NULL, "en", value);
+                translatable_add_entry (tr, entry_number, key, NULL, locale, value);
                 g_free(key);
                 g_free(value);
             }
@@ -277,7 +277,7 @@ void properties_file_type_read_contents (PropertiesFileType *self, Translatable 
     g_list_free_full(key_list, g_free);
 }
 
-gchar* properties_file_type_write_contents(PropertiesFileType *self, Translatable *tr, gchar *input_contents)
+gchar* properties_file_type_write_contents(PropertiesFileType *self, Translatable *tr, gchar *input_contents, gchar *locale)
 {
     gchar *equalpos, *key, *value, *stripped_line;
     GString *output_contents = g_string_new(NULL);
@@ -310,7 +310,7 @@ gchar* properties_file_type_write_contents(PropertiesFileType *self, Translatabl
             /* extract key from line */
             key = g_strstrip(g_strndup(stripped_line, equalpos - stripped_line));
             /* retrieve value of localized string for UIK from Translatable object */
-            value = translatable_get_string_for_uik(tr, key, "en");
+            value = translatable_get_string_for_uik(tr, key, locale);
             /* append the key-value pair to the output */
             g_string_append_printf(output_contents, "%s=%s\n", key, value);
             g_free(key);

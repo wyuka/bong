@@ -15,10 +15,10 @@ int main(int argc, char* argv[])
     if (argc < 2)
         return 0;
 
-    tr.readFile(argv[1]);
+    tr.readFile(argv[1], "en");
 
     tr.setStringForUik("contextMenuSearchText", "en", "haha");
-    tr.writeFile(argv[1]);
+    tr.writeFile(argv[1], "en");
 
     return 0;
 }

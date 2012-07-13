@@ -52,10 +52,10 @@ struct _Translatable
     struct _HashValue **entry_array;
 
     /* vtable */
-    void (*read_file) (FileType *file_type, Translatable *self, gchar *fileName);
-    void (*read_contents) (FileType *file_type, Translatable *self, gchar *input_contents);
-    void (*write_file) (FileType *file_type, Translatable *self, gchar *fileName);
-    gchar* (*write_contents) (FileType *file_type, Translatable *self, gchar *input_contents);
+    void (*read_file) (FileType *file_type, Translatable *self, gchar *fileName, gchar *locale);
+    void (*read_contents) (FileType *file_type, Translatable *self, gchar *input_contents, gchar *locale);
+    void (*write_file) (FileType *file_type, Translatable *self, gchar *fileName, gchar *locale);
+    gchar* (*write_contents) (FileType *file_type, Translatable *self, gchar *input_contents, gchar *locale);
 };
 
 /*again, some boilerplate code */
@@ -87,21 +87,21 @@ void translatable_destroy (gpointer data);
  * self Translatable object
  * file_name name of the file from which to read into the object
  */
-void translatable_read_file (Translatable *self, gchar *file_name);
+void translatable_read_file (Translatable *self, gchar *file_name, gchar *locale);
 
 /* parse contents stored in a string into the Translatable object
  * @params
  * self Translatable object
  * input_contents the contents which need to be parsed
  */
-void translatable_read_contents (Translatable *self, gchar *input_contents);
+void translatable_read_contents (Translatable *self, gchar *input_contents, gchar *locale);
 
 /* write out the Translatable object contents to a file
  * @params
  * self Translatable object
  * file_name name of the file to which to write from the object
  */
-void translatable_write_file (Translatable *self, gchar *file_name);
+void translatable_write_file (Translatable *self, gchar *file_name, gchar *locale);
 
 /* parse contents stored in a string, and modify it according to contents of the Translatable object
  * @returns returns the modified string
@@ -109,7 +109,7 @@ void translatable_write_file (Translatable *self, gchar *file_name);
  * self Translatable object
  * input_contents the contents which need to be parsed
  */
-gchar* translatable_write_contents (Translatable *self, gchar *input_contents);
+gchar* translatable_write_contents (Translatable *self, gchar *input_contents, gchar *locale);
 
 /* add string entry to Translatable object
  * @params

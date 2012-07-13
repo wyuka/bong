@@ -26,36 +26,44 @@ void TranslatableQt::init()
     g_type_init();
 }
 
-void TranslatableQt::readFile(QString fileName)
+void TranslatableQt::readFile(QString fileName, QString locale)
 {
-    gchar *file_name;
+    gchar *file_name, *_locale;
     file_name = qstringToGchar(fileName);
-    translatable_read_file (m_translatable, file_name);
+    _locale = qstringToGchar(locale);
+    translatable_read_file (m_translatable, file_name, _locale);
     g_free(file_name);
+    g_free(_locale);
 }
 
-void TranslatableQt::writeFile(QString fileName)
+void TranslatableQt::writeFile(QString fileName, QString locale)
 {
-    gchar *file_name;
+    gchar *file_name, *_locale;
     file_name = qstringToGchar(fileName);
-    translatable_write_file (m_translatable, file_name);
+    _locale = qstringToGchar(locale);
+    translatable_write_file (m_translatable, file_name, _locale);
     g_free(file_name);
+    g_free(_locale);
 }
 
-void TranslatableQt::readContents(QString contents)
+void TranslatableQt::readContents(QString contents, QString locale)
 {
-    gchar *input_contents;
+    gchar *input_contents, *_locale;
     input_contents = qstringToGchar(contents);
-    translatable_read_contents (m_translatable, input_contents);
+    _locale = qstringToGchar(locale);
+    translatable_read_contents (m_translatable, input_contents, _locale);
     g_free(input_contents);
+    g_free(_locale);
 }
 
-QString TranslatableQt::writeContents(QString contents)
+QString TranslatableQt::writeContents(QString contents, QString locale)
 {
-    gchar *input_contents, *output_contents;
+    gchar *input_contents, *output_contents, *_locale;
     input_contents = qstringToGchar(contents);
-    output_contents = translatable_write_contents (m_translatable, input_contents);
+    _locale = qstringToGchar(locale);
+    output_contents = translatable_write_contents (m_translatable, input_contents, _locale);
     g_free(input_contents);
+    g_free(_locale);
     QString toReturn = QString::fromUtf8(output_contents);
     g_free(output_contents);
     return toReturn;

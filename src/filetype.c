@@ -11,25 +11,25 @@ void file_type_destroy_impl (FileType *self);
 
 /* Public methods */
 
-void file_type_read_file (FileType *self, Translatable *tr, gchar *file_name)
+void file_type_read_file (FileType *self, Translatable *tr, gchar *file_name, gchar *locale)
 {
     /* look up appropriate function from vtable, and call it. */
-    FILE_TYPE_GET_CLASS (self)->read_file (self, tr, file_name);
+    FILE_TYPE_GET_CLASS (self)->read_file (self, tr, file_name, locale);
 }
 
-void file_type_read_contents (FileType *self, Translatable *tr, gchar *input_contents)
+void file_type_read_contents (FileType *self, Translatable *tr, gchar *input_contents, gchar *locale)
 {
-    FILE_TYPE_GET_CLASS (self)->read_contents (self, tr, input_contents);
+    FILE_TYPE_GET_CLASS (self)->read_contents (self, tr, input_contents, locale);
 }
 
-void file_type_write_file (FileType *self, Translatable *tr, gchar *file_name)
+void file_type_write_file (FileType *self, Translatable *tr, gchar *file_name, gchar *locale)
 {
-    FILE_TYPE_GET_CLASS (self)->write_file (self, tr, file_name);
+    FILE_TYPE_GET_CLASS (self)->write_file (self, tr, file_name, locale);
 }
 
-gchar* file_type_write_contents (FileType *self, Translatable *tr, gchar *input_contents)
+gchar* file_type_write_contents (FileType *self, Translatable *tr, gchar *input_contents, gchar *locale)
 {
-    return (FILE_TYPE_GET_CLASS (self)->write_contents (self, tr, input_contents));
+    return (FILE_TYPE_GET_CLASS (self)->write_contents (self, tr, input_contents, locale));
 }
 
 void file_type_destroy (FileType *self)

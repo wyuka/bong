@@ -17,7 +17,7 @@ FileType* dtd_file_type_new (void)
     return FILE_TYPE(g_object_new(TYPE_DTD_FILE_TYPE, NULL));
 }
 
-void dtd_file_type_read_file (DtdFileType *self, Translatable *tr, gchar *file_name)
+void dtd_file_type_read_file (DtdFileType *self, Translatable *tr, gchar *file_name, gchar *locale)
 {
     gchar *input_contents = NULL;
     GError *read_error = NULL;
@@ -25,12 +25,12 @@ void dtd_file_type_read_file (DtdFileType *self, Translatable *tr, gchar *file_n
     /* read file contents into an allocated string */
     g_file_get_contents(file_name, &input_contents, &length, &read_error);
     /* parse the contents */
-    dtd_file_type_read_contents (self, tr, input_contents);
+    dtd_file_type_read_contents (self, tr, input_contents, locale);
     /* free the string containing the file contents */
     g_free (input_contents);
 }
 
-void dtd_file_type_write_file (DtdFileType *self, Translatable *tr, gchar *file_name)
+void dtd_file_type_write_file (DtdFileType *self, Translatable *tr, gchar *file_name, gchar *locale)
 {
     gchar *input_contents = NULL;
     gchar *output_contents = NULL;
@@ -43,7 +43,7 @@ void dtd_file_type_write_file (DtdFileType *self, Translatable *tr, gchar *file_
      * This string is created by modifying the input contents according
      * to entries in the Translatable object
      */
-    output_contents = dtd_file_type_write_contents (self, tr, input_contents);
+    output_contents = dtd_file_type_write_contents (self, tr, input_contents, locale);
 
     /* FIXME: for now, just printing the output contents.
      * Should write it to a new file
@@ -99,7 +99,7 @@ GType dtd_file_type_get_type (void)
     return type;
 }
 
-void dtd_file_type_read_contents (DtdFileType *self, Translatable *tr, gchar *input_contents)
+void dtd_file_type_read_contents (DtdFileType *self, Translatable *tr, gchar *input_contents, gchar *locale)
 {
     int entry_number = -1;
     GError *error = 0;
@@ -117,7 +117,7 @@ void dtd_file_type_read_contents (DtdFileType *self, Translatable *tr, gchar *in
         gchar *value = g_match_info_fetch(match_info, 2);
         entry_number++;
         /* extract key (UIK) and value, store in Translatable object */
-        translatable_add_entry (tr, entry_number, key, NULL, "en", value);
+        translatable_add_entry (tr, entry_number, key, NULL, locale, value);
         g_match_info_next(match_info, NULL);
 
         g_free(key);
@@ -158,7 +158,7 @@ void dtd_file_type_read_contents (DtdFileType *self, Translatable *tr, gchar *in
     g_regex_unref(string_regex);
 }
 
-gchar* dtd_file_type_write_contents (DtdFileType *self, Translatable *tr, gchar *input_contents)
+gchar* dtd_file_type_write_contents (DtdFileType *self, Translatable *tr, gchar *input_contents, gchar *locale)
 {
     GError *error = 0;
     GMatchInfo *match_info;
@@ -184,13 +184,13 @@ gchar* dtd_file_type_write_contents (DtdFileType *self, Translatable *tr, gchar 
 
         /* extract UIK, retrieve its value from Translatable object */
         gchar *key = g_match_info_fetch(match_info, 1);
-        gchar *value = translatable_get_string_for_uik(tr, key, "en");
+        gchar *value = translatable_get_string_for_uik(tr, key, locale);
         /* store this modified value in the output */
         g_string_append_printf (output_contents, "<!ENTITY %s \"%s\">", key, value);
         g_match_info_next (match_info, NULL);
         g_free (key);
     }
-    output_contents = g_strjoin ("", output_contents, input_contents + lastpos, NULL);
+    g_string_append (output_contents, input_contents + lastpos);
     /* free regex variables */
     g_match_info_free(match_info);
     g_regex_unref(string_regex);

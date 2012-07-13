@@ -34,10 +34,10 @@ struct _FileTypeClass
     GObjectClass parent_class;
 
     /* vtable */
-    void (*read_file) (FileType *self, struct _Translatable *tr, gchar *fileName);
-    void (*write_file) (FileType *self, struct _Translatable *tr, gchar *fileName);
-    void (*read_contents) (FileType *self, struct _Translatable *tr, gchar *input_contents);
-    gchar* (*write_contents) (FileType *self, struct _Translatable *tr, gchar *input_contents);
+    void (*read_file) (FileType *self, struct _Translatable *tr, gchar *fileName, gchar *locale);
+    void (*write_file) (FileType *self, struct _Translatable *tr, gchar *fileName, gchar *locale);
+    void (*read_contents) (FileType *self, struct _Translatable *tr, gchar *input_contents, gchar *locale);
+    gchar* (*write_contents) (FileType *self, struct _Translatable *tr, gchar *input_contents, gchar *locale);
 
     void (*destroy) (FileType *self);
 };
@@ -58,20 +58,20 @@ void file_type_instance_init (GTypeInstance *instance, gpointer klass);
 /* virtual public methods */
 
 /* read a file with given file name, and store entries into a Translatable object */
-void file_type_read_file (FileType *self, struct _Translatable *tr, gchar *file_name);
+void file_type_read_file (FileType *self, struct _Translatable *tr, gchar *file_name, gchar *locale);
 
 /* parse the contents given in a string, and store entries into a Translatable object */
-void file_type_read_contents (FileType *self, struct _Translatable *tr, gchar *input_contents);
+void file_type_read_contents (FileType *self, struct _Translatable *tr, gchar *input_contents, gchar *locale);
 
 /* read a file with given file name, modify it according to the entries
  * in Translatable object, and write to a different file */
-void file_type_write_file (FileType *self, struct _Translatable *tr, gchar *file_name);
+void file_type_write_file (FileType *self, struct _Translatable *tr, gchar *file_name, gchar *locale);
 
 /* parse the contents given in a string, modify it according to the entries
  * in Translatable object, and return as an allocated string.
  * The output must be manually free'd.
  */
-gchar* file_type_write_contents (FileType *self, struct _Translatable *tr, gchar *input_contents);
+gchar* file_type_write_contents (FileType *self, struct _Translatable *tr, gchar *input_contents, gchar *locale);
 
 /* destroy the file type object, free the space allocated to it */
 void file_type_destroy (FileType *self);

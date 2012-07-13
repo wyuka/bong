@@ -11,25 +11,25 @@
 
 /* Public methods */
 
-void translatable_read_file (Translatable *self, gchar *file_name)
+void translatable_read_file (Translatable *self, gchar *file_name, gchar *locale)
 {
     /* look up appropriate function from vtable, and call it. */
-    self->read_file (self->file_type, self, file_name);
+    self->read_file (self->file_type, self, file_name, locale);
 }
 
-void translatable_read_contents (Translatable *self, gchar *input_contents)
+void translatable_read_contents (Translatable *self, gchar *input_contents, gchar *locale)
 {
-    self->read_contents (self->file_type, self, input_contents);
+    self->read_contents (self->file_type, self, input_contents, locale);
 }
 
-void translatable_write_file (Translatable *self, gchar *file_name)
+void translatable_write_file (Translatable *self, gchar *file_name, gchar *locale)
 {
-    self->write_file (self->file_type, self, file_name);
+    self->write_file (self->file_type, self, file_name, locale);
 }
 
-gchar* translatable_write_contents (Translatable *self, gchar *input_contents)
+gchar* translatable_write_contents (Translatable *self, gchar *input_contents, gchar *locale)
 {
-    return self->write_contents (self->file_type, self, input_contents);
+    return self->write_contents (self->file_type, self, input_contents, locale);
 }
 
 void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar *uik, gchar *note, gchar *locale, gchar *string)

@@ -26,10 +26,10 @@ int main(int argc, char* argv[])
 
     translatable_init (tr, ty);
     g_file_get_contents(argv[1], &input_contents, &length, &read_error);
-    translatable_read_contents (tr, input_contents);
+    translatable_read_contents (tr, input_contents, "en");
 
     translatable_set_string_for_uik(tr, "contextMenuSearchText", "en", "haha");
-    output_contents = translatable_write_contents (tr, input_contents);
+    output_contents = translatable_write_contents (tr, input_contents, "en");
     g_printf("%s", output_contents);
     g_free (output_contents);
     g_free (input_contents);

@@ -19,11 +19,11 @@ public:
 
     static void init();
 
-    void readFile(QString fileName);
-    void writeFile(QString fileName);
+    void readFile(QString fileName, QString locale);
+    void writeFile(QString fileName, QString locale);
 
-    void readContents(QString contents);
-    QString writeContents(QString contents);
+    void readContents(QString contents, QString locale);
+    QString writeContents(QString contents, QString locale);
 
     void addEntry(QString uik, EntryIndex entryNumber, QString note, QString locale, QString string);
 

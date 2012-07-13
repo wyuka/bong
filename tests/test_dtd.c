@@ -22,10 +22,10 @@ int main(int argc, char* argv[])
     tr = translatable_new();
 
     translatable_init (tr, ty);
-    translatable_read_file (tr, argv[1]);
+    translatable_read_file (tr, argv[1], "en");
 
     translatable_set_string_for_uik(tr, "reloadTab.label", "en", "yoyo");
-    translatable_write_file (tr, argv[1]);
+    translatable_write_file (tr, argv[1], "en");
     translatable_destroy (tr);
 
     return 0;
