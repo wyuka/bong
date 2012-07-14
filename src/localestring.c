@@ -49,6 +49,14 @@ void locale_string_set_locale (LocaleString *self, gchar *locale)
 
 void locale_string_set_string (LocaleString *self, gchar *string)
 {
+    if (string == NULL)
+    {
+        g_free (self->string);
+        self->string_length = 0;
+        self->string = NULL;
+        return;
+    }
+
     int len = strlen(string);
     if (len >= self->string_length)
     {

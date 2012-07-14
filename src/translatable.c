@@ -48,7 +48,7 @@ void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar 
         hash_value_set_entry_index (v, entry_number);
         if (entry_number >= 0 && entry_number <= MAX_ENTRY_NUMBER)
             self->entry_array[entry_number] = v;
-        if (locale && string)
+        if (locale)
         {
             hash_value_add_localestring (v, locale, string);
         }
@@ -66,7 +66,7 @@ void translatable_add_entry (Translatable *self, EntryIndex entry_number, gchar 
             hash_value_set_entry_index (v, entry_number);
             self->entry_array[entry_number] = v;
         }
-        if (locale && string)
+        if (locale)
         {
             hash_value_add_localestring (v, locale, string);
         }
@@ -80,7 +80,7 @@ void translatable_set_string_for_uik (Translatable *self, gchar *uik, gchar *loc
     HashValue *v = g_hash_table_lookup (self->hash_table, uik);
     if (v == NULL)
         return;
-    if (locale && string)
+    if (locale)
     {
         /* create new localestring, add to entry (will replace older one, if exists) */
         hash_value_add_localestring (v, locale, string);
@@ -99,7 +99,7 @@ void translatable_set_string_for_entry_index (Translatable *self, EntryIndex ent
     {
         return;
     }
-    if (locale && string)
+    if (locale)
     {
         hash_value_add_localestring (v, locale, string);
     }
